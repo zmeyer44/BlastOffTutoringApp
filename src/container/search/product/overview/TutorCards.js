@@ -14,7 +14,7 @@ const TutorCards = ({ user }) => {
     <UserCard cover={coverImage} key={id}>
       <div className="card user-card theme-grid-2">
         <Cards headless>
-          <figure>
+          <figure className='test'>
             <div className="user-card__img">
               <img src={profileImage} alt="" />
             </div>
@@ -30,7 +30,7 @@ const TutorCards = ({ user }) => {
               <div className="card__bottom">
                 <div className="card__content">
                   <Heading className="card__name" as="h6">
-                    <Link to="#">{`${firstName} ${lastName}`}</Link>
+                    <Link to={`profile/${id}`}>{`${firstName} ${lastName}`}</Link>
                   </Heading>
                   <p className="card__designation">{school}</p>
                 </div>
@@ -45,14 +45,18 @@ const TutorCards = ({ user }) => {
                   )}
                 </div>
                 <div className="card__actions">
-                  <Button size="default" type="white">
-                    <FeatherIcon icon="message-square" size={14} />
-                    Chat
-                  </Button>
-                  <Button size="default" type="primary">
-                    <FeatherIcon icon="user" size={14} style={{ color: 'white' }} />
-                    View Profile
-                  </Button>
+                  <Link to={`chat/${id}`}>
+                    <Button size="default" type="white">
+                      <FeatherIcon icon="message-square" size={14} />
+                      Chat
+                    </Button>
+                  </Link>
+                  <Link to={`profile/${id}`}>
+                    <Button size="default" type="primary">
+                      <FeatherIcon icon="user" size={14} style={{ color: 'white' }} />
+                      View Profile
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </figcaption>

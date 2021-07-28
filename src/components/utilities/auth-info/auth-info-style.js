@@ -293,6 +293,9 @@ const AtbdTopDropdwon = Styled.div`
         justify-content: space-between;
     }  
 
+    .atbd-top-dropdwon__content figcaption {
+               width: 100%;
+    }
     .atbd-top-dropdwon__content figcaption span {
         ${({ theme }) => (theme.rtl ? 'padding-right' : 'padding-left')}: 0;
     }

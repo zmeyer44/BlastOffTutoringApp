@@ -46,17 +46,17 @@ const Dashboard = () => {
       <PageHeader
         ghost
         title="Welcome to Blast Off"
-        buttons={[
-          <div key="6" className="page-header-actions">
-            <CalendarButtonPageHeader key="1" />
-            <ExportButtonPageHeader key="2" />
-            <ShareButtonPageHeader key="3" />
-            <Button size="small" key="4" type="primary">
-              <FeatherIcon icon="plus" size={14} />
-              Add New
-            </Button>
-          </div>,
-        ]}
+        // buttons={[
+        //   <div key="6" className="page-header-actions">
+        //     <CalendarButtonPageHeader key="1" />
+        //     <ExportButtonPageHeader key="2" />
+        //     <ShareButtonPageHeader key="3" />
+        //     <Button size="small" key="4" type="primary">
+        //       <FeatherIcon icon="plus" size={14} />
+        //       Add New
+        //     </Button>
+        //   </div>,
+        // ]}
       />
       <Main>
         <Row justify="center" gutter={25}>
@@ -74,7 +74,7 @@ const Dashboard = () => {
             </Col>
           )}
 
-          <Col xxl={8} lg={24} xs={24}>
+          <Col lg={24} xs={24}>
             <Suspense
               fallback={
                 <Cards headless>
@@ -82,11 +82,11 @@ const Dashboard = () => {
                 </Cards>
               }
             >
-              <BannerCta2 name={profile.firstName ? `${profile.firstName} ${profile.lastName}` : ''} />
+              <BannerCta2 name={profile.firstName && `${profile.firstName} ${profile.lastName}`} />
             </Suspense>
           </Col>
 
-          <Col xxl={6} xl={8} lg={10} sm={24} xs={24}>
+          <Col xl={8} lg={10} sm={24} xs={24}>
             <Suspense
               fallback={
                 <Cards headless>
@@ -98,7 +98,7 @@ const Dashboard = () => {
             </Suspense>
           </Col>
 
-          <Col xxl={6} xl={16} lg={14} sm={24} xs={24}>
+          <Col xl={16} lg={14} sm={24} xs={24}>
             <Suspense
               fallback={
                 <Cards headless>
@@ -109,7 +109,7 @@ const Dashboard = () => {
               <Banner7 />
             </Suspense>
           </Col>
-          <Col xxl={6} xl={16} lg={14} sm={24} xs={24}>
+          <Col xl={16} lg={14} sm={24} xs={24}>
             <Suspense
               fallback={
                 <Cards headless>
@@ -120,7 +120,7 @@ const Dashboard = () => {
               <BannerRecords />
             </Suspense>
           </Col>
-          <Col xxl={6} xl={8} lg={10} sm={24} xs={24}>
+          <Col xl={8} lg={10} sm={24} xs={24}>
             <Suspense
               fallback={
                 <Cards headless>
@@ -132,7 +132,7 @@ const Dashboard = () => {
             </Suspense>
           </Col>
 
-          <Col xxl={8} lg={24} xs={24}>
+          <Col lg={24} xs={24}>
             <Suspense
               fallback={
                 <Cards headless>

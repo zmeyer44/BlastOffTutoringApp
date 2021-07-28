@@ -3,6 +3,10 @@ const actions = {
   SESSION_ADD_SUCCESS: 'SESSION_ADD_SUCCESS',
   SESSION_ADD_ERR: 'SESSION_ADD_ERR',
 
+  SESSION_REVIEW_BEGIN: 'SESSION_REVIEW_BEGIN',
+  SESSION_REVIEW_SUCCESS: 'SESSION_REVIEW_SUCCESS',
+  SESSION_REVIEW_ERR: 'SESSION_REVIEW_ERR',
+
   SESSION_READ_BEGIN: 'SESSION_READ_BEGIN',
   SESSION_READ_SUCCESS: 'SESSION_READ_SUCCESS',
   SESSION_READ_ERR: 'SESSION_READ_ERR',
@@ -83,6 +87,25 @@ const actions = {
   sessionAddErr: err => {
     return {
       type: actions.SESSION_ADD_ERR,
+      err,
+    };
+  },
+  sessionReviewBegin: () => {
+    return {
+      type: actions.SESSION_REVIEW_BEGIN,
+    };
+  },
+
+  sessionReviewSuccess: data => {
+    return {
+      type: actions.SESSION_REVIEW_SUCCESS,
+      data,
+    };
+  },
+
+  sessionReviewErr: err => {
+    return {
+      type: actions.SESSION_REVIEW_ERR,
       err,
     };
   },

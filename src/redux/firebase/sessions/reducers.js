@@ -5,6 +5,10 @@ const {
   SESSION_ADD_SUCCESS,
   SESSION_ADD_ERR,
 
+  SESSION_REVIEW_BEGIN,
+  SESSION_REVIEW_SUCCESS,
+  SESSION_REVIEW_ERR,
+
   SESSION_UPLOAD_BEGIN,
   SESSION_UPLOAD_SUCCESS,
   SESSION_UPLOAD_ERR,
@@ -83,6 +87,26 @@ const sessionReducer = (state = initialState, action) => {
       };
 
     case SESSION_ADD_ERR:
+      return {
+        ...state,
+        error: err,
+        loading: false,
+      };
+
+    case SESSION_REVIEW_BEGIN:
+      return {
+        ...state,
+        loading: true,
+      };
+
+    case SESSION_REVIEW_SUCCESS:
+      return {
+        ...state,
+        error: false,
+        loading: false,
+      };
+
+    case SESSION_REVIEW_ERR:
       return {
         ...state,
         error: err,

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Form, Input, Select, DatePicker, Radio, Upload, Spin } from 'antd';
-import { Link } from 'react-router-dom';
+import { Row, Col, Form, Input, Select, DatePicker, TimePicker, Radio, Upload, Spin } from 'antd';
+import { Link, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import FeatherIcon from 'feather-icons-react';
 import moment from 'moment';
@@ -14,66 +14,75 @@ import { sessionUpdate, sessionSingle, sessionFileUploder } from '../../redux/fi
 import Heading from '../../components/heading/heading';
 
 const { Option } = Select;
-const dateFormat = 'YYYY/MM/DD';
+const dateFormat = 'MM/DD/YYYY';
 const Edit = ({ match }) => {
   const dispatch = useDispatch();
+  const history = useHistory();
 
-  const { session, isLoading, url, isFileLoading } = useSelector(state => {
+  const { rtl, singleSession, isLoading } = useSelector(state => {
     return {
-      session: state.singleSession.data,
-      isLoading: state.session.loading,
-      url: state.session.url,
-      isFileLoading: state.session.fileLoading,
+      rtl: state.ChangeLayoutMode.rtlData,
+      singleSession: state.singleSession.data,
+      isLoading: state.singleSession.loading,
     };
   });
+
   const [state, setState] = useState({
-    join: null,
+    startTime: '',
+    startDate: '',
+    message: '',
   });
   const [form] = Form.useForm();
 
   useEffect(() => {
-    form.setFieldsValue(session);
-  }, [form, session]);
-
-  useEffect(() => {
     if (sessionSingle) {
-      dispatch(sessionSingle(parseInt(match.params.id, 10)));
+      dispatch(sessionSingle(match.params.id));
     }
   }, [dispatch, match.params.id]);
 
+  useEffect(() => {
+    if (singleSession) {
+      setState({ ...state, startDate: singleSession.date, startTime: singleSession.time });
+    }
+  }, [singleSession, dispatch]);
+
   const handleSubmit = values => {
-    dispatch(
-      sessionUpdate(parseInt(match.params.id, 10), {
-        ...values,
-        url: url !== null ? url : session.url,
-        join: state.join,
-        id: parseInt(match.params.id, 10),
-      }),
-    );
+    if (!state.startDate) {
+      setState({
+        ...state,
+        message: 'Please enter a date',
+      });
+    } else if (!state.startTime) {
+      setState({
+        ...state,
+        message: 'Please enter a time',
+      });
+    } else {
+      let updatedValues = {
+        date: state.startDate,
+        time: state.startTime,
+        subject: values.subject,
+        title: values.title,
+      };
+      dispatch(
+        sessionUpdate(match.params.id, {
+          ...updatedValues,
+        }),
+      );
+      setState({
+        ...state,
+        message: '',
+      });
+      history.push('/home/sessions/view');
+    }
   };
 
-  const onChange = (date, dateString) => {
-    setState({ join: dateString });
+  const onChangeStart = (date, dateString) => {
+    setState({ ...state, startDate: dateString });
   };
 
-  const props = {
-    name: 'file',
-    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-    multiple: false,
-    showUploadList: false,
-    headers: {
-      authorization: 'authorization-text',
-    },
-    onChange(info) {
-      if (info.file.status !== 'uploading') {
-        dispatch(sessionFileUploder(info.file.originFileObj));
-      }
-      if (info.file.status === 'done') {
-        // message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === 'error') {
-        // message.error(`${info.file.name} file upload failed.`);
-      }
-    },
+  const onChangeStartTime = (time, timeString) => {
+    setState({ ...state, startTime: timeString });
   };
 
   return (
@@ -94,106 +103,107 @@ const Edit = ({ match }) => {
           <Col xs={24}>
             <RecordFormWrapper>
               <Cards headless>
-                {session === null ? (
+                {singleSession === null ? (
                   <div className="record-spin">
                     <Spin />
                   </div>
                 ) : (
                   <Row justify="center">
                     <Col xl={10} md={16} xs={24}>
-                      <figure className="pro-image align-center-v mt-25">
-                        {session !== null && (
-                          <img
-                            src={
-                              url !== null
-                                ? url
-                                : session.url !== null
-                                ? session.url
-                                : require('../../static/img/avatar/profileImage.png')
-                            }
-                            alt={session.id}
-                          />
-                        )}
-
-                        <figcaption>
-                          <Upload {...props}>
-                            <Link className="upload-btn" to="#">
-                              <FeatherIcon icon="camera" size={16} />
-                            </Link>
-                          </Upload>
-                          <div className="info">
-                            <Heading as="h4">Profile Photo</Heading>
-                          </div>
-                          {isFileLoading && (
-                            <div className="isUploadSpain">
-                              <Spin />
-                            </div>
-                          )}
-                        </figcaption>
-                      </figure>
                       <BasicFormWrapper>
-                        {session.name !== undefined ? (
-                          <Form
-                            className="add-record-form"
-                            style={{ width: '100%' }}
-                            layout="vertical"
-                            form={form}
-                            name="edit"
-                            onFinish={handleSubmit}
-                            initialValues={session}
+                        <Form
+                          className="add-record-form"
+                          style={{ width: '100%' }}
+                          layout="vertical"
+                          form={form}
+                          name="addnew"
+                          onFinish={handleSubmit}
+                        >
+                          <Form.Item
+                            name="student"
+                            initialValue={singleSession.student.name}
+                            label="Student"
+                            rules={[{ required: true, message: 'Please select a student' }]}
                           >
-                            <Form.Item name="name" label="Name">
-                              <Input />
-                            </Form.Item>
-                            <Form.Item name="email" rules={[{ type: 'email' }]} label="Email">
-                              <Input />
-                            </Form.Item>
-                            <Form.Item name="country" label="Country">
-                              <Select style={{ width: '100%' }}>
-                                <Option value="">Please Select</Option>
-                                <Option value="bangladesh">Bangladesh</Option>
-                                <Option value="india">India</Option>
-                                <Option value="pakistan">Pakistan</Option>
-                                <Option value="srilanka">Srilanka</Option>
-                              </Select>
-                            </Form.Item>
-                            <Form.Item name="city" label="City">
-                              <Select style={{ width: '100%' }}>
-                                <Option value="">Please Select</Option>
-                                <Option value="dhaka">Dhaka</Option>
-                                <Option value="mymensingh">Mymensingh</Option>
-                                <Option value="khulna">Khulna</Option>
-                                <Option value="barisal">Barisal</Option>
-                              </Select>
-                            </Form.Item>
-                            <Form.Item name="company" label="Company">
-                              <Input />
-                            </Form.Item>
-                            <Form.Item name="position" label="Position">
-                              <Input />
-                            </Form.Item>
-                            <Form.Item label="Joining Date">
-                              <DatePicker
-                                defaultValue={moment(`${state.join === null ? session.join : state.join}`, dateFormat)}
-                                onChange={onChange}
-                                style={{ width: '100%' }}
-                                format={dateFormat}
-                              />
-                            </Form.Item>
-                            <Form.Item name="status" label="Status">
-                              <Radio.Group>
-                                <Radio value="active">Active</Radio>
-                                <Radio value="deactivated">Deactivated</Radio>
-                                <Radio value="blocked">Blocked</Radio>
-                              </Radio.Group>
-                            </Form.Item>
-                            <div className="record-form-actions text-right">
-                              <Button htmlType="submit" type="primary">
-                                {isLoading ? 'Loading...' : 'Update'}
-                              </Button>
-                            </div>
-                          </Form>
-                        ) : null}
+                            <Select style={{ width: '100%' }} disabled>
+                              <Option value={singleSession.student.name}>{singleSession.student.name}</Option>
+                            </Select>
+                          </Form.Item>
+
+                          <Form.Item
+                            name="title"
+                            label="Title"
+                            initialValue={singleSession.title}
+                            rules={[{ required: true, message: 'Please add a title' }]}
+                          >
+                            <Input placeholder="e.g. Midterm review session" />
+                          </Form.Item>
+                          <Form.Item
+                            name="subject"
+                            label="Subject"
+                            initialValue={singleSession.subject}
+                            rules={[{ required: true, message: 'Please select a subject' }]}
+                          >
+                            <Select style={{ width: '100%' }}>
+                              <Option value="Math">Math</Option>
+                              <Option value="English">English</Option>
+                              <Option value="Biology">Biology</Option>
+                              <Option value="Chemistry">Chemistry</Option>
+                              <Option value="Social Studies">Social Studies</Option>
+                              <Option value="Spanish">Spanish</Option>
+                              <Option value="French">French</Option>
+                              <Option value="Geometry">Geometry</Option>
+                              <Option value="Marketing">Marketing</Option>
+                              <Option value="Computer Science">Computer Science</Option>
+                              <Option value="Physics">Physics</Option>
+                              {/* {convos && students.length ? (
+                              students.map(student => {
+                                return (
+                                  <Option key={student.id} value={student.id}>
+                                    {student.name}
+                                  </Option>
+                                );
+                              })
+                            ) : (
+                              <Option>You must first chat with a student!</Option>
+                            )} */}
+                            </Select>
+                          </Form.Item>
+
+                          <Form.Item label="Meeting Date">
+                            <DatePicker
+                              onChange={onChangeStart}
+                              format={dateFormat}
+                              defaultValue={moment(singleSession.date, dateFormat)}
+                            />
+                            <TimePicker
+                              onChange={onChangeStartTime}
+                              picker="time"
+                              format="h:mm a"
+                              minuteStep={15}
+                              defaultValue={moment(singleSession.time, 'h:mm a')}
+                            />
+                          </Form.Item>
+                          <Form.Item name="status" label="Status">
+                            <Radio.Group defaultValue={singleSession.status}>
+                              <Radio value="accepted" disabled>
+                                Accepted
+                              </Radio>
+                              <Radio value="pending" disabled>
+                                Pending
+                              </Radio>
+                              <Radio value="rejected" disabled>
+                                Rejected
+                              </Radio>
+                            </Radio.Group>
+                          </Form.Item>
+                          {state.message ? <p style={{ color: 'red' }}>{state.message}</p> : null}
+                          <div className="record-form-actions text-right">
+                            <Button size="default" htmlType="Save" type="primary">
+                              {isLoading ? 'Loading...' : 'Update'}
+                            </Button>
+                          </div>
+                        </Form>
                       </BasicFormWrapper>
                     </Col>
                   </Row>
@@ -205,10 +215,6 @@ const Edit = ({ match }) => {
       </Main>
     </>
   );
-};
-
-Edit.propTypes = {
-  match: PropTypes.shape(PropTypes.object).isRequired,
 };
 
 export default Edit;

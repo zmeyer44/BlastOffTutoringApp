@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Avatar } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, useRouteMatch } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import FeatherIcon from 'feather-icons-react';
 import { InfoWraper, NavAuth, UserDropDwon } from './auth-info-style';
@@ -15,6 +15,7 @@ import Heading from '../../heading/heading';
 
 const AuthInfo = () => {
   const dispatch = useDispatch();
+  const { path } = useRouteMatch();
   const { isLogout, userLoggedIn } = useSelector(state => {
     return {
       isLogout: state.fb.auth.uid,
@@ -47,29 +48,35 @@ const AuthInfo = () => {
           </figcaption>
         </figure>
         <ul className="user-dropdwon__links">
+          {userLoggedIn.type == 'Tutor' && (
+            <li>
+              <Link to={`${path}/settings`}>
+                <FeatherIcon icon="user" /> Profile
+              </Link>
+            </li>
+          )}
+
           <li>
-            <Link to="settings">
-              <FeatherIcon icon="user" /> Profile
-            </Link>
-          </li>
-          <li>
-            <Link to="calendar/month">
+            <Link to={`${path}/calendar/week`}>
               <FeatherIcon icon="calendar" /> Calendar
             </Link>
           </li>
           <li>
-            <Link to="activity">
+            <Link to={`${path}/sessions/view`}>
               <FeatherIcon icon="globe" /> Activity
             </Link>
           </li>
 
+          {userLoggedIn.type == 'Tutor' && (
+            <li>
+              <Link to={`${path}/settings`}>
+                <FeatherIcon icon="settings" /> Settings
+              </Link>
+            </li>
+          )}
+
           <li>
-            <Link to="settings">
-              <FeatherIcon icon="settings" /> Settings
-            </Link>
-          </li>
-          <li>
-            <Link to="support">
+            <Link to={`${path}/support`}>
               <FeatherIcon icon="bell" /> Help
             </Link>
           </li>
@@ -84,7 +91,7 @@ const AuthInfo = () => {
   return (
     <InfoWraper>
       <Message />
-      <Notification />
+      {/* <Notification /> */}
       <Features />
       <Support />
 

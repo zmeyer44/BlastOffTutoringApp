@@ -7,6 +7,10 @@ const actions = {
   FETCH_CONVOS_SUCCESS: 'FETCH_CONVOS_SUCCESS',
   FETCH_CONVOS_ERR: 'FETCH_CONVOS_ERR',
 
+  SET_READ_BEGIN: 'SET_READ_BEGIN',
+  SET_READ_SUCCESS: 'SET_READ_SUCCESS',
+  SET_READ_ERR: 'SET_READ_ERR',
+
   NEW_CONVOS_BEGIN: 'NEW_CONVOS_BEGIN',
   NEW_CONVOS_SUCCESS: 'NEW_CONVOS_SUCCESS',
   NEW_CONVOS_ERR: 'NEW_CONVOS_ERR',
@@ -47,6 +51,24 @@ const actions = {
   fbSearchErr: err => {
     return {
       type: actions.FB_SEARCH_ERR,
+      err,
+    };
+  },
+  setReadBegin: () => {
+    return {
+      type: actions.SET_READ_BEGIN,
+    };
+  },
+
+  setReadSuccess: () => {
+    return {
+      type: actions.SET_READ_SUCCESS,
+    };
+  },
+
+  setReadErr: err => {
+    return {
+      type: actions.SET_READ_ERR,
       err,
     };
   },

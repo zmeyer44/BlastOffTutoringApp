@@ -43,6 +43,23 @@ const fbAuthLogout = () => {
   };
 };
 
+// const fbFetchSchools = () => {
+//   return async (dispatch, getState, { getFirebase, getFirestore }) => {
+//     const db = getFirestore();
+//     const data = [];
+//     try {
+//       await dispatch(schoolReadBegin());
+//       const query = await db.collection('schools').get();
+//       await query.forEach(doc => {
+//         data.push(doc.data().name);
+//       });
+//       await dispatch(schoolReadSuccess(data));
+//     } catch (err) {
+//       await dispatch(schoolReadErr(err));
+//     }
+//   };
+// };
+
 const fbSchoolAuth = (school, code) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     const db = getFirestore();
@@ -53,9 +70,7 @@ const fbSchoolAuth = (school, code) => {
         .collection('schools')
         .doc(`${school}`)
         .get();
-      console.log(query.data());
       if (query.data().code == code) {
-        console.log('Correct');
         await dispatch(fbSchoolAuthSuccess(query.data()));
       } else {
         await dispatch(fbSchoolAuthWrong('Code is incorrect'));
@@ -75,15 +90,12 @@ const fbAuthSignUp = newUser => {
       await dispatch(fbSignUpBegin());
       const resp = await fb.auth().createUserWithEmailAndPassword(newUser.email, newUser.password);
       const cover = Math.floor(Math.random() * 8) + 1;
+      delete newUser.password;
       await db
         .collection('users')
         .doc(resp.user.uid)
         .set({
-          firstName: newUser.firstName,
-          lastName: newUser.lastName,
-          email: newUser.email,
-          school: newUser.school,
-          type: newUser.type,
+          ...newUser,
           profileImage:
             'https://firebasestorage.googleapis.com/v0/b/blast-off-tutoring.appspot.com/o/images%2Fdefault_profile_image.jpg?alt=media',
           coverImage: `https://firebasestorage.googleapis.com/v0/b/blast-off-tutoring.appspot.com/o/images%2Fcover_${cover}.png?alt=media`,

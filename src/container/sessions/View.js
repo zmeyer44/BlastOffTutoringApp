@@ -1,40 +1,97 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Table, Spin } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
+import { useFirestoreConnect } from 'react-redux-firebase';
 import { Link } from 'react-router-dom';
 import FeatherIcon from 'feather-icons-react';
 import { RecordViewWrapper } from './style';
 import { Main, TableWrapper } from '../styled';
+import { Popover } from '../../components/popup/popup';
 import { Button } from '../../components/buttons/buttons';
 import { Cards } from '../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../components/page-headers/page-headers';
-import { sessionDelete, sessionRead, sessionSearch } from '../../redux/firebase/sessions/actionCreator';
+import { sessionDelete, sessionRead, sessionSearch, sessionUpdate } from '../../redux/firebase/sessions/actionCreator';
 
 const ViewPage = () => {
   const dispatch = useDispatch();
-  const { sessions, isLoading } = useSelector(state => {
+  const { sessions1, sessions2, isLoading, uid, type } = useSelector(state => {
     return {
-      sessions: state.session.data,
-      isLoading: state.session.loading,
+      sessions1: state.fs.data.sessions1,
+      sessions2: state.fs.data.sessions2,
+      isLoading: state.fs.status.requesting.sessions2,
+      uid: state.fb.auth.uid,
+      type: state.fb.profile.type,
     };
   });
+
+  useFirestoreConnect([{ collection: 'sessions', where: ['student.id', '==', `${uid}`], storeAs: 'sessions1' }]);
+  useFirestoreConnect([
+    {
+      collection: 'sessions',
+      where: [
+        ['tutor.id', '==', `${uid}`],
+        ['archived', '==', false],
+      ],
+      storeAs: 'sessions2',
+    },
+  ]);
 
   const [state, setState] = useState({
     selectedRowKeys: [],
   });
   const { selectedRowKeys } = state;
+  const [sessions, setSessions] = useState(null);
 
   useEffect(() => {
-    if (sessionRead) {
-      dispatch(sessionRead());
+    if (sessions1 || sessions2) {
+      //case where just a student
+      if (!sessions2) {
+        let sessions1Array = Object.values(sessions1);
+        setSessions(sessions1Array);
+
+        //case where just a tutor
+      } else if (!sessions1) {
+        let sessions2Array = Object.values(sessions2);
+        setSessions(sessions2Array);
+
+        //must contain both
+      } else {
+        let sessions1Array = Object.values(sessions1);
+        let sessions2Array = Object.values(sessions2);
+
+        const totalSessions = sessions2Array.concat(sessions1Array);
+        setSessions(totalSessions);
+      }
     }
-  }, [dispatch]);
+  }, [sessions1, sessions2]);
   const dataSource = [];
 
+  const handleAccept = id => {
+    dispatch(sessionUpdate(id, { status: 'accepted' }));
+
+    return false;
+  };
+  const handleReject = id => {
+    const confirm = window.confirm('Are you sure reject this Session?');
+    if (confirm) {
+      dispatch(sessionUpdate(id, { status: 'rejected' }));
+      // dispatch(sessionRead(uid));
+    }
+    return false;
+  };
+  const handleArchive = id => {
+    const confirm = window.confirm('Are you sure archive this?');
+    if (confirm) {
+      dispatch(sessionUpdate(id, { archived: true }));
+    }
+
+    return false;
+  };
   const handleDelete = id => {
     const confirm = window.confirm('Are you sure delete this?');
     if (confirm) {
-      dispatch(sessionDelete(parseInt(id, 10)));
+      dispatch(sessionDelete(id));
+      // dispatch(sessionRead(uid));
     }
     return false;
   };
@@ -43,7 +100,7 @@ const ViewPage = () => {
     dispatch(sessionSearch(e.target.value, sessions));
   };
 
-  if (sessions.length)
+  if (sessions && sessions.length)
     sessions.map((session, key) => {
       const { id, tutor, student, date, time, subject, status, link } = session;
       return dataSource.push({
@@ -81,19 +138,94 @@ const ViewPage = () => {
         date,
         time,
         subject,
-        status: <span className={`status deactivated`}>{status}</span>,
+        status: <span className={`status ${status}`}>{status}</span>,
         action: (
           <div className="table-actions">
-            {/* <Link className="edit" to={`/admin/firestore/edit/${id}`}>
-              <FeatherIcon icon="edit" size={14} />
-            </Link>
-            &nbsp;&nbsp;&nbsp;
-            <Link className="delete" onClick={() => handleDelete(id)} to="#">
-              <FeatherIcon icon="trash-2" size={14} />
-            </Link> */}
-            <a href={link} target="_blank">
-              <span className={`status active`}>Join Call</span>
-            </a>
+            {uid === student.id && status == 'pending' && (
+              <>
+                <Popover placement="top" content="Accept Session">
+                  <Link className="edit" onClick={() => handleAccept(id)} to="#">
+                    <Button className="btn-icon" type="primary" to="#" shape="circle">
+                      <FeatherIcon icon="check-circle" size={16} />
+                    </Button>
+                  </Link>
+                </Popover>
+                <Popover placement="top" content="Reject Session">
+                  <Link className="delete" onClick={() => handleReject(id)} to="#">
+                    <Button className="btn-icon" type="danger" to="#" shape="circle">
+                      <FeatherIcon icon="trash-2" size={16} />
+                    </Button>
+                  </Link>
+                </Popover>
+                &nbsp;&nbsp;&nbsp;
+              </>
+            )}
+            {uid === tutor.id &&
+              (status !== 'approved' ? (
+                <>
+                  {status == 'pending' && (
+                    <Popover placement="top" content="Edit Session">
+                      <Link className="edit" to={`edit/${id}`}>
+                        <Button className="btn-icon" type="primary" to="#" shape="circle">
+                          <FeatherIcon icon="edit" size={16} />
+                        </Button>
+                      </Link>
+                    </Popover>
+                  )}
+                  <Popover placement="top" content="Delete Session">
+                    <Link className="delete" onClick={() => handleDelete(id)} to="#">
+                      <Button className="btn-icon" type="danger" to="#" shape="circle">
+                        <FeatherIcon icon="trash-2" size={16} />
+                      </Button>
+                    </Link>
+                  </Popover>
+                  &nbsp;&nbsp;&nbsp;
+                </>
+              ) : (
+                <>
+                  <Popover placement="top" content="Archive Session">
+                    <Link className="delete" onClick={() => handleArchive(id)} to="#">
+                      <Button
+                        className="btn-icon"
+                        type="primary"
+                        to="#"
+                        shape="circle"
+                        href={`${link}?type=t&name=${tutor.name}`}
+                      >
+                        <span className={`status`} style={{ minWidth: 0 }}>
+                          Archive{' '}
+                        </span>
+                      </Button>
+                    </Link>
+                  </Popover>
+                </>
+              ))}
+            {status !== 'approved' &&
+              (uid === tutor.id ? (
+                <Button
+                  className="btn-icon"
+                  type="success"
+                  to="#"
+                  shape="circle"
+                  href={`${link}?type=t&name=${tutor.name}`}
+                >
+                  <span className={`status`} style={{ minWidth: 0 }}>
+                    Join Call
+                  </span>
+                </Button>
+              ) : (
+                <Button
+                  className="btn-icon"
+                  type="success"
+                  to="#"
+                  shape="circle"
+                  href={`${link}?type=s&name=${student.name}`}
+                >
+                  <span className={`status`} style={{ minWidth: 0 }}>
+                    Join Call
+                  </span>
+                </Button>
+              ))}
           </div>
         ),
       });
@@ -150,13 +282,17 @@ const ViewPage = () => {
     <RecordViewWrapper>
       <PageHeader
         subTitle={
-          <div>
-            <Button className="btn-add_new" size="default" key="1" type="primary">
-              <Link to="/home/sessions/add">
-                <FeatherIcon icon="plus" size={14} /> New Invite
-              </Link>
-            </Button>
-          </div>
+          <>
+            {type == 'Tutor' && (
+              <div>
+                <Button className="btn-add_new" size="default" key="1" type="primary">
+                  <Link to="/home/sessions/add">
+                    <FeatherIcon icon="plus" size={14} /> New Invite
+                  </Link>
+                </Button>
+              </div>
+            )}
+          </>
         }
         buttons={[
           <div key={1} className="search-box">

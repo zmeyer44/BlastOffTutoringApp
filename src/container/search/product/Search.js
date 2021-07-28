@@ -86,9 +86,9 @@ const Search = () => {
                           <NavLink to={`${path}/grid`}>
                             <FeatherIcon icon="grid" size={16} />
                           </NavLink>
-                          <NavLink to={`${path}/list`}>
+                          {/* <NavLink to={`${path}/list`}>
                             <FeatherIcon icon="list" size={16} />
-                          </NavLink>
+                          </NavLink> */}
                         </div>
                       ))}
                   </div>

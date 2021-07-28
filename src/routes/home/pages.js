@@ -3,6 +3,7 @@ import { Switch, Route, useRouteMatch } from 'react-router-dom';
 
 const NotFound = lazy(() => import('../../container/pages/404'));
 const Support = lazy(() => import('../../container/pages/support'));
+const Ticket = lazy(() => import('../../container/pages/ticket'));
 const Maintenance = lazy(() => import('../../container/pages/Maintenance'));
 const Pricing = lazy(() => import('../../container/pages/PricingTable'));
 const Faq = lazy(() => import('../../container/pages/Faq'));
@@ -22,17 +23,18 @@ const PagesRoute = () => {
     <Switch>
       <Route path={`${path}/404`} component={NotFound} />
       <Route path={`${path}/support`} component={Support} />
-      <Route path={`${path}/maintenance`} component={Maintenance} />
+      <Route path={`${path}/ticket`} component={Ticket} />
+      <Route path={`${path}/settings`} component={Settings} />
+      {/* <Route path={`${path}/maintenance`} component={Maintenance} />
       <Route path={`${path}/Pricing`} component={Pricing} />
       <Route path={`${path}/faq`} component={Faq} />
       <Route path={`${path}/starter`} component={BlankPage} />
       <Route path={`${path}/comingSoon`} component={ComingSoon} />
       <Route path={`${path}/wizards`} component={Wizards} />
-      <Route path={`${path}/settings`} component={Settings} />
       <Route path={`${path}/knowledgeBase`} component={KnowledgeBase} />
       <Route path={`${path}/all-articles`} component={AllArticle} />
       <Route path={`${path}/knowledgebaseSingle/:id`} component={KnowledgeSingle} />
-      <Route path={`${path}/changelog`} component={ChangeLog} />
+      <Route path={`${path}/changelog`} component={ChangeLog} /> */}
     </Switch>
   );
 };

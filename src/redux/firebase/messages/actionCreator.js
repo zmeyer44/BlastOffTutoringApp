@@ -15,9 +15,9 @@ const {
   newConvosSuccess,
   newConvosErr,
 
-  readMsgBegin,
-  readMsgSuccess,
-  readMsgErr,
+  setReadBegin,
+  setReadSuccess,
+  setReadErr,
 
   deleteConvoBegin,
   deleteConvoSuccess,
@@ -27,12 +27,26 @@ const {
 const newMessage = (conversation, messageInfo) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     const db = getFirestore();
+
     try {
       //await dispatch(newMessageBegin());
+      let count = 1;
       const query = db.collection('conversations').doc(`${conversation}`);
-
-      query.update({
-        messages: firebase.firestore.FieldValue.arrayUnion(messageInfo),
+      query.get().then(doc => {
+        console.log(doc.data().notification);
+        if (doc.data().notification) {
+          console.log(count);
+          count = doc.data().notification.count;
+          count++;
+        }
+        query.update({
+          messages: firebase.firestore.FieldValue.arrayUnion(messageInfo),
+          recentActivity: new Date().getTime(),
+          notification: {
+            from: messageInfo.sentBy,
+            count: count,
+          },
+        });
       });
 
       //await dispatch(newMessageSuccess(data));
@@ -40,6 +54,39 @@ const newMessage = (conversation, messageInfo) => {
     } catch (err) {
       //await dispatch(newMessageErr(err));
       //await addNotificationError(err);
+    }
+  };
+};
+
+const setRead = (conversation, userLoggedIn) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    const db = getFirestore();
+    console.log(conversation);
+    try {
+      await dispatch(setReadBegin());
+      const query = await db
+        .collection('conversations')
+        .doc(`${conversation.id}`)
+        .get()
+        .then(doc => {
+          console.log('test');
+          console.log(`Last notification from: ${doc.data().notification.from}`);
+          console.log(`User Logged In: ${userLoggedIn}`);
+          if (doc.data().notification.from !== userLoggedIn) {
+            console.log('updating');
+            db.collection('conversations')
+              .doc(`${conversation.id}`)
+              .update({
+                notification: {
+                  count: 0,
+                  from: userLoggedIn,
+                },
+              });
+          }
+        });
+      await dispatch(setReadSuccess());
+    } catch (err) {
+      await dispatch(setReadErr(err));
     }
   };
 };
@@ -79,7 +126,7 @@ const newConversation = (userId, targetId) => {
             .get()
             .then(doc => {
               if (doc.exists) {
-                let { id, firstName, lastName, profileImage } = doc.data();
+                let { id, firstName, lastName, profileImage, email } = doc.data();
                 const query = db.collection('conversations').doc();
                 let user1Name = `${userData.firstName} ${userData.lastName}`;
                 let user2Name = `${firstName} ${lastName}`;
@@ -90,11 +137,13 @@ const newConversation = (userId, targetId) => {
                     id: userData.id,
                     name: user1Name,
                     profileImage: userData.profileImage,
+                    email: userData.email,
                   },
                   user2: {
                     id: id,
                     name: user2Name,
                     profileImage: profileImage,
+                    email: email,
                   },
                   users: [userId, targetId],
                   recentActivity: new Date().getTime(),
@@ -257,4 +306,4 @@ const fbFileClear = () => {
   };
 };
 
-export { fetchConvos, newMessage, newConversation };
+export { fetchConvos, newMessage, newConversation, setRead };

@@ -1,6 +1,11 @@
 import { notification } from 'antd';
 import actions from './actions';
 
+const addReviewNotificationSuccess = () => {
+  notification.success({
+    message: 'Your Review has been Submited',
+  });
+};
 const addNotificationSuccess = () => {
   notification.success({
     message: 'Your Session has been Submited',
@@ -65,6 +70,10 @@ const {
   sessionSearchBegin,
   sessionSearchSuccess,
   sessionSearchErr,
+
+  sessionReviewBegin,
+  sessionReviewSuccess,
+  sessionReviewErr,
 } = actions;
 
 const sessionSubmit = data => {
@@ -75,6 +84,7 @@ const sessionSubmit = data => {
       const query = await db.collection('sessions').doc();
       data.link = `https://blastofftutoring.herokuapp.com/${query.id}`;
       data.status = 'pending';
+      data.archived = false;
       query.set({
         ...data,
         id: query.id,
@@ -88,14 +98,51 @@ const sessionSubmit = data => {
   };
 };
 
-const sessionRead = () => {
+const sessionReview = (id, data) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    const db = getFirestore();
+    try {
+      await dispatch(sessionReviewBegin());
+      await db
+        .collection('reviews')
+        .doc(`${id}`)
+        .set({
+          ...data,
+        });
+      await db
+        .collection('sessions')
+        .doc(`${id}`)
+        .update({
+          status: 'approved',
+          duration: data.duration,
+        });
+      await dispatch(sessionReviewSuccess());
+      await addReviewNotificationSuccess();
+    } catch (err) {
+      await dispatch(sessionReviewErr(err));
+      await addNotificationError(err);
+    }
+  };
+};
+
+const sessionRead = uid => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     const db = getFirestore();
     const data = [];
     try {
       await dispatch(sessionReadBegin());
-      const query = await db.collection('sessions').get();
+      const query = await db
+        .collection('sessions')
+        .where('student.id', '==', uid)
+        .get();
       await query.forEach(doc => {
+        data.push(doc.data());
+      });
+      const query2 = await db
+        .collection('sessions')
+        .where('tutor.id', '==', uid)
+        .get();
+      await query2.forEach(doc => {
         data.push(doc.data());
       });
       await dispatch(sessionReadSuccess(data));
@@ -135,14 +182,7 @@ const sessionUpdate = (id, data) => {
           ...data,
         });
 
-      const query = await db
-        .collection('sessions')
-        .where('id', '==', id)
-        .get();
-      await query.forEach(doc => {
-        dispatch(sessionUpdateSuccess(doc.data()));
-      });
-
+      // await dispatch(sessionRead(uid));
       await updateNotificationSuccess();
     } catch (err) {
       await dispatch(sessionUpdateErr(err));
@@ -161,11 +201,7 @@ const sessionDelete = id => {
         .collection('sessions')
         .doc(`${id}`)
         .delete();
-      const query = await db.collection('sessions').get();
-      await query.forEach(doc => {
-        data.push(doc.data());
-      });
-      await dispatch(sessionDeleteSuccess(data));
+
       await deleteNotificationSuccess();
       await sessionRead();
     } catch (err) {
@@ -244,6 +280,7 @@ export {
   sessionDelete,
   sessionSingle,
   sessionUpdate,
+  sessionReview,
   sessionRead,
   sessionFileUploder,
   sessionFileClear,

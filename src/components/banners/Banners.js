@@ -40,7 +40,7 @@ const Banner2 = () => {
           <figcaption>
             <h2>View your Calendar</h2>
             <p>Keep track of exams, assignments, and all scheduled meetings.</p>
-            <Link to="/home/calendar/month">
+            <Link to="/home/calendar/week">
               <Button size="large" type="white" style={{ marginTop: '7px' }}>
                 View Calendar
               </Button>
@@ -61,7 +61,7 @@ const BannerEvent = () => {
           <figcaption>
             <h2>Schedule a Meeting</h2>
             <p>Schedule a meeting with a student you have been chatting with.</p>
-            <Link to="/home/event">
+            <Link to="/home/sessions/add">
               <Button size="large" type="white" style={{ marginTop: '7px' }}>
                 Create Meeting
               </Button>
@@ -218,7 +218,7 @@ const BannerRecords = () => {
           <figcaption>
             <h2>View Records</h2>
             <p>See if you have received any new records in your inbox.</p>
-            <Link to="/home/records">
+            <Link to="/home/sessions/view">
               <Button className="btn-outlined" size="large" type="primary">
                 View Records
               </Button>
@@ -322,9 +322,11 @@ const BannerCta = () => {
       >
         <div className="banner-cta__content">
           <h2>Dedicated Support</h2>
+          <Link to="/home/support">
           <Button size="small" type="primary">
             Learn More
           </Button>
+          </Link>
         </div>
       </div>
     </BannerCtaWrap>

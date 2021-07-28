@@ -1375,6 +1375,22 @@ const TableWrapper = Styled.div`
                             color: ${({ theme }) => theme['danger-color']};
                             background: ${({ theme }) => theme['danger-color']}10;
                         }
+                        &.accepted{
+                            color: ${({ theme }) => theme['primary-color']};
+                            background: ${({ theme }) => theme['primary-color']}10;
+                        }
+                        &.pending{
+                            color: ${({ theme }) => theme['warning-color']};
+                            background: ${({ theme }) => theme['warning-color']}10;
+                        }
+                        &.approved{
+                           color: ${({ theme }) => theme['success-color']};
+                            background: ${({ theme }) => theme['success-color']}10;
+                        }
+                        &.rejected{
+                           color: ${({ theme }) => theme['danger-color']};
+                            background: ${({ theme }) => theme['danger-color']}10;
+                        }
                     }
                     .table-actions{
                         a{

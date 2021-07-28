@@ -32,7 +32,9 @@ const ChatApp = ({ match }) => {
     };
   });
 
-  useFirestoreConnect([{ collection: 'conversations', where: ['users', 'array-contains', `${uid}`] }]);
+  useFirestoreConnect([
+    { collection: 'conversations', where: ['users', 'array-contains', `${uid}`], orderBy: 'recentActivity' },
+  ]);
 
   const left = !rtl ? 'left' : 'right';
   const [state, setState] = useState({
@@ -95,17 +97,17 @@ const ChatApp = ({ match }) => {
       <PageHeader
         ghost
         title="Chat"
-        buttons={[
-          <div key="1" className="page-header-actions">
-            <CalendarButtonPageHeader />
-            <ExportButtonPageHeader />
-            <ShareButtonPageHeader />
-            <Button size="small" type="primary">
-              <FeatherIcon icon="plus" size={14} />
-              Add New
-            </Button>
-          </div>,
-        ]}
+        // buttons={[
+        //   <div key="1" className="page-header-actions">
+        //     <CalendarButtonPageHeader />
+        //     <ExportButtonPageHeader />
+        //     <ShareButtonPageHeader />
+        //     <Button size="small" type="primary">
+        //       <FeatherIcon icon="plus" size={14} />
+        //       Add New
+        //     </Button>
+        //   </div>,
+        // ]}
       />
 
       <Main>
@@ -174,8 +176,8 @@ const ChatApp = ({ match }) => {
                   </Cards>
                 }
               >
-                {/* <Route exact path={match.path} component={SingleChat} /> */}
                 <Route exact path={`${match.path}/:id`} component={SingleChat} />
+                <Route exact path={`${match.path}`} component={SingleChat} />
               </Suspense>
             </Switch>
           </Col>

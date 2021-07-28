@@ -2,6 +2,13 @@ import Styled from 'styled-components';
 
 const UserCard = Styled.div`
   text-align: center;
+    transition: all 0.2s ease-out;
+  &:hover {
+     transform: translateY(-5px) scale(1.005) translateZ(0);
+  box-shadow: 0 24px 36px rgba(0,0,0,0.11),
+    0 24px 46px rgba(220, 233, 255, 0.48);
+    border-radius: 30px;
+  }
   .user-card{
     &.theme-list{
       .ant-card-body{
@@ -81,6 +88,7 @@ const UserCard = Styled.div`
       }
       figure{
         position: relative;
+         
       }
       .user-card__img{
         margin-bottom: 0;
@@ -108,7 +116,11 @@ const UserCard = Styled.div`
         background-color: #fff;
         top: -26px;
         padding-top: 102px;
+        padding-right: 20px;
+        padding-left: 20px;
         border-radius: 30px 30px 10px 10px;
+
+       
         
       }
     }
@@ -282,6 +294,7 @@ const UserCard = Styled.div`
         }
       }
     }
+    
   }
 
   .user-card{

@@ -12,10 +12,12 @@ import withAdminLayout from '../../layout/withAdminLayout';
 
 const Projects = lazy(() => import('./projects'));
 const Inbox = lazy(() => import('../../container/email/Email'));
+const Profile = lazy(() => import('../../container/profile/profile/Index'));
 const Chat = lazy(() => import('../../container/chat/ChatApp'));
 const Myprofile = lazy(() => import('../../container/profile/myProfile/Index'));
 const Firebase = lazy(() => import('./firebase'));
 const Sessions = lazy(() => import('./sessions'));
+const Schools = lazy(() => import('./schools'));
 const ToDo = lazy(() => import('../../container/toDo/ToDo'));
 const Note = lazy(() => import('../../container/note/Note'));
 const Contact = lazy(() => import('../../container/contact/Contact'));
@@ -39,9 +41,9 @@ const Home = () => {
         }
       >
         <Route path={path} component={Dashboard} />
-        <Route path={`${path}/search`} component={Search} />
         <Route path={`${path}`} component={Pages} />
-        <Route path={`${path}`} component={Features} />
+        <Route path={`${path}/profile/:id`} component={Profile} />
+        <Route path={`${path}/search`} component={Search} />
         <Route path={`${path}/users`} component={Users} />
         <Route path={`${path}/gallery`} component={Gallery} />
         <Route path={`${path}/project`} component={Projects} />
@@ -50,6 +52,7 @@ const Home = () => {
         <Route path={`${path}/email/:page`} component={Inbox} />
         <Route path={`${path}/firestore`} component={Firebase} />
         <Route path={`${path}/sessions`} component={Sessions} />
+        <Route path={`${path}/schools`} component={Schools} />
         <Route path={`${path}/chat`} component={Chat} />
         <Route path={`${path}/profile/myProfile`} component={Myprofile} />
         <Route path={`${path}/app/to-do`} component={ToDo} />

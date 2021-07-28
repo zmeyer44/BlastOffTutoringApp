@@ -8,7 +8,7 @@ const HorizontalForm = () => {
   return (
     <BasicFormWrapper>
       <HorizontalFormStyleWrap>
-        <Cards title="Horizontal Form">
+        <Cards title="Horizontal Form" style={{ fontSize: '16px' }}>
           <Form name="horizontal-form" layout="horizontal">
             <Row align="middle">
               <Col lg={8} md={9} xs={24}>

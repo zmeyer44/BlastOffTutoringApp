@@ -9,6 +9,10 @@ const {
   FETCH_CONVOS_SUCCESS,
   FETCH_CONVOS_ERR,
 
+  SET_READ_BEGIN,
+  SET_READ_SUCCESS,
+  SET_READ_ERR,
+
   NEW_CONVOS_BEGIN,
   NEW_CONVOS_SUCCESS,
   NEW_CONVOS_ERR,
@@ -120,6 +124,25 @@ const fsConvosReducer = (state = initialState, action) => {
         loading: false,
       };
 
+    case SET_READ_BEGIN:
+      return {
+        ...state,
+        loading: true,
+      };
+
+    case SET_READ_SUCCESS:
+      return {
+        ...state,
+        error: false,
+        loading: false,
+      };
+
+    case SET_READ_ERR:
+      return {
+        ...state,
+        error: err,
+        loading: false,
+      };
     case NEW_CONVOS_BEGIN:
       return {
         ...state,

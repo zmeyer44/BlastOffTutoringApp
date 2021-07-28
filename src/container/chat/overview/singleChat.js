@@ -1,19 +1,15 @@
 /* eslint-disable jsx-a11y/accessible-emoji */
 import React, { useState, useEffect, Fragment, useRef } from 'react';
-import { Upload, message } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { NavLink, Link } from 'react-router-dom';
 import FeatherIcon from 'feather-icons-react';
 import moment from 'moment';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { SmileOutlined, MoreOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import { Scrollbars } from 'react-custom-scrollbars';
-import Picker from 'emoji-picker-react';
-import { SingleChatWrapper, MessageList, Footer, BackShadowEmoji } from '../style';
+import { SingleChatWrapper, MessageList, Footer } from '../style';
 import Heading from '../../../components/heading/heading';
 import { Button } from '../../../components/buttons/buttons';
-import { newMessage, newConversation } from '../../../redux/firebase/messages/actionCreator';
+import { newMessage, newConversation, setRead } from '../../../redux/firebase/messages/actionCreator';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { Dropdown } from '../../../components/dropdown/dropdown';
 
@@ -21,12 +17,11 @@ const SingleChat = ({ match }) => {
   const dispatch = useDispatch();
   const msgSection = useRef();
 
-  const { rtl, chat, uid, convos, convosOrdered, isLoader } = useSelector(state => {
+  const { rtl, chat, uid, convosOrdered, isLoader } = useSelector(state => {
     return {
       rtl: state.ChangeLayoutMode.rtlData,
       chat: state.chatSingle.data,
       uid: state.fb.auth.uid,
-      convos: state.fs.data.conversations,
       convosOrdered: state.fs.ordered.conversations,
       isLoader: state.conversations.loading,
     };
@@ -43,9 +38,10 @@ const SingleChat = ({ match }) => {
     fileList: [],
     fileList2: [],
     loading: isLoader,
+    newConvo: false,
   });
 
-  const { singleContent, name, profileImage, me, inputValue, fileList, fileList2, loading } = state;
+  const { singleContent, name, profileImage, me, inputValue, fileList, fileList2, loading, newConvo } = state;
 
   // ?
   useEffect(() => {
@@ -53,23 +49,33 @@ const SingleChat = ({ match }) => {
     let name;
     let profileImage;
 
-    if (convos) {
-      let arrayOfConvos = Object.values(convos);
-      let currentConvo = arrayOfConvos.filter(convo => {
-        return convo.users.includes(match.params.id);
-      });
-      if (currentConvo[0]) {
-        if (currentConvo[0].users[0] == uid) {
-          name = currentConvo[0].user2.name;
-          profileImage = currentConvo[0].user2.profileImage;
+    if (convosOrdered) {
+      let currentConvo;
+      if (match.params.id) {
+        console.log('Props');
+        let tempConvo = convosOrdered.filter(convo => {
+          return convo.users.includes(match.params.id);
+        });
+        currentConvo = tempConvo[0];
+      } else {
+        //no props, not a new convo, just pressed the button
+        currentConvo = convosOrdered[convosOrdered.length - 1];
+      }
+      // At this point current convo is either 1 conversation or none.
+
+      if (currentConvo) {
+        if (currentConvo.users[0] == uid) {
+          name = currentConvo.user2.name;
+          profileImage = currentConvo.user2.profileImage;
         } else {
-          name = currentConvo[0].user1.name;
-          profileImage = currentConvo[0].user1.profileImage;
+          name = currentConvo.user1.name;
+          profileImage = currentConvo.user1.profileImage;
         }
         if (!unmounted) {
           setState({
-            chatData: currentConvo[0],
-            singleContent: currentConvo[0],
+            ...state,
+            chatData: currentConvo,
+            singleContent: currentConvo,
             name: name,
             profileImage,
             inputValue,
@@ -81,40 +87,50 @@ const SingleChat = ({ match }) => {
         }
       } else {
         console.log('NEW CONTACT');
-        dispatch(newConversation(uid, match.params.id));
+        if (!newConvo) {
+          setState({
+            ...state,
+            newConvo: true,
+          });
+          dispatch(newConversation(uid, match.params.id));
+        }
       }
     } else if (convosOrdered) {
       if (match.params.id && convosOrdered.length === 0) {
         console.log('FIRST CONTACT');
-        dispatch(newConversation(uid, match.params.id));
+        if (!newConvo) {
+          setState({
+            ...state,
+            newConvo: true,
+          });
+          dispatch(newConversation(uid, match.params.id));
+        }
       }
     } else {
       console.log('Null');
-      console.log(convos);
     }
 
     return () => {
       unmounted = true;
     };
-  }, [match, inputValue, convos]);
+  }, [match]);
+
   useEffect(() => {
     msgSection.current.scrollToBottom();
   }, [state]);
 
-  // useEffect(() => {
-  //   if (!loading) {
-  //     console.log(convos);
-  //     let currentConvo = convos.filter(convo => {
-  //       console.log(match.params.id);
-  //       return convo.users.includes(match.params.id);
-  //     });
+  useEffect(() => {
+    if (state.chatData) {
+      console.log('dispatching');
 
-  //     if (!currentConvo.length) {
-  //       console.log('CALLED');
-  //       dispatch(newConversation(uid, match.params.id));
-  //     }
-  //   }
-  // }, [loading]);
+      if (
+        state.chatData.notification &&
+        state.chatData.notification.from !== uid && state.chatData.notification.from == null
+      ) {
+        dispatch(setRead(state.chatData, null));
+      }
+    }
+  }, [state.chatData]);
 
   const handleChange = e => {
     setState({
@@ -125,63 +141,64 @@ const SingleChat = ({ match }) => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    console.log(e);
-    const pushcontent = {
-      content: inputValue,
-      timestamp: new Date().getTime(),
-      seen: false,
-      sentBy: me,
-    };
-    dispatch(newMessage(state.chatData.id, pushcontent));
-    setState({
-      ...state,
-      inputValue: '',
-    });
+    if (inputValue) {
+      const pushcontent = {
+        content: inputValue,
+        timestamp: new Date().getTime(),
+        seen: false,
+        sentBy: me,
+      };
+      dispatch(newMessage(state.chatData.id, pushcontent));
+      setState({
+        ...state,
+        inputValue: '',
+      });
+    }
   };
 
-  const props = {
-    name: 'file',
-    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-    headers: {
-      authorization: 'authorization-text',
-    },
-    listType: 'picture-card',
-    onChange(info) {
-      if (info.file.status !== 'uploading') {
-        // console.log(info.file, info.fileList);
-        setState({
-          ...state,
-          fileList: info.fileList,
-        });
-      }
-      if (info.file.status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
-  };
-  const attachment = {
-    name: 'file',
-    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-    headers: {
-      authorization: 'authorization-text',
-    },
-    onChange(info) {
-      if (info.file.status !== 'uploading') {
-        // console.log(info.file, info.fileList);
-        setState({
-          ...state,
-          fileList2: info.fileList,
-        });
-      }
-      if (info.file.status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
-  };
+  // const props = {
+  //   name: 'file',
+  //   action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+  //   headers: {
+  //     authorization: 'authorization-text',
+  //   },
+  //   listType: 'picture-card',
+  //   onChange(info) {
+  //     if (info.file.status !== 'uploading') {
+  //       // console.log(info.file, info.fileList);
+  //       setState({
+  //         ...state,
+  //         fileList: info.fileList,
+  //       });
+  //     }
+  //     if (info.file.status === 'done') {
+  //       message.success(`${info.file.name} file uploaded successfully`);
+  //     } else if (info.file.status === 'error') {
+  //       message.error(`${info.file.name} file upload failed.`);
+  //     }
+  //   },
+  // };
+  // const attachment = {
+  //   name: 'file',
+  //   action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+  //   headers: {
+  //     authorization: 'authorization-text',
+  //   },
+  //   onChange(info) {
+  //     if (info.file.status !== 'uploading') {
+  //       // console.log(info.file, info.fileList);
+  //       setState({
+  //         ...state,
+  //         fileList2: info.fileList,
+  //       });
+  //     }
+  //     if (info.file.status === 'done') {
+  //       message.success(`${info.file.name} file uploaded successfully`);
+  //     } else if (info.file.status === 'error') {
+  //       message.error(`${info.file.name} file upload failed.`);
+  //     }
+  //   },
+  // };
 
   const renderView = ({ style, ...props }) => {
     const customStyle = {
@@ -246,7 +263,7 @@ const SingleChat = ({ match }) => {
         title={
           <>
             <Heading as="h5">{!loading && name}</Heading>
-            <p>Active Now</p>
+            {/* <p>Active Now</p> */}
           </>
         }
         isbutton={[
@@ -297,151 +314,9 @@ const SingleChat = ({ match }) => {
                               <div className="atbd-chatbox__message">
                                 <MessageList className="message-box">{mes.content}</MessageList>
                               </div>
-
-                              <div className="atbd-chatbox__actions">
-                                <Dropdown
-                                  action={['hover']}
-                                  content={
-                                    <div className="atbd-chatbox__emoji">
-                                      <ul>
-                                        <li>
-                                          <Link to="#">
-                                            <span role="img">&#127773;</span>
-                                          </Link>
-                                        </li>
-                                        <li>
-                                          <Link to="#">
-                                            <span role="img">&#128116;</span>
-                                          </Link>
-                                        </li>
-                                        <li>
-                                          <Link to="#">
-                                            <span role="img">&#128127;</span>
-                                          </Link>
-                                        </li>
-                                        <li>
-                                          <Link to="#">
-                                            <span role="img">&#128151;</span>
-                                          </Link>
-                                        </li>
-                                        <li>
-                                          <Link to="#">
-                                            <span role="img">&#128400;</span>
-                                          </Link>
-                                        </li>
-                                        <li>
-                                          <Link to="#">
-                                            <MoreOutlined />
-                                          </Link>
-                                        </li>
-                                      </ul>
-                                    </div>
-                                  }
-                                  placement="bottomCenter"
-                                >
-                                  <Link to="#">
-                                    <SmileOutlined />
-                                  </Link>
-                                </Dropdown>
-
-                                <Dropdown
-                                  action={['hover']}
-                                  content={
-                                    <div className="atbd-chatbox__messageControl">
-                                      <ul>
-                                        <li>
-                                          <Link to="#">Copy</Link>
-                                        </li>
-                                        <li>
-                                          <Link to="#">Edit</Link>
-                                        </li>
-                                        <li>
-                                          <Link to="#">Quote</Link>
-                                        </li>
-                                        <li>
-                                          <Link to="#">Forward</Link>
-                                        </li>
-                                        <li>
-                                          <Link to="#">Remove</Link>
-                                        </li>
-                                      </ul>
-                                    </div>
-                                  }
-                                  placement="bottomCenter"
-                                >
-                                  <Link to="#">
-                                    <FeatherIcon icon="more-horizontal" size={16} />
-                                  </Link>
-                                </Dropdown>
-                              </div>
                             </div>
                           ) : (
                             <div className="atbd-chatbox__contentInner d-flex">
-                              <div className="atbd-chatbox__actions">
-                                <Dropdown
-                                  action={['hover']}
-                                  content={
-                                    <div className="atbd-chatbox__messageControl">
-                                      <ul>
-                                        <li>
-                                          <Link to="#">Edit </Link>
-                                        </li>
-                                        <li>
-                                          <Link to="#">Copy </Link>
-                                        </li>
-                                        <li>
-                                          <Link to="#">Quote</Link>
-                                        </li>
-                                        <li>
-                                          <Link to="#">Forward</Link>
-                                        </li>
-                                        <li>
-                                          <Link to="#">Remove</Link>
-                                        </li>
-                                      </ul>
-                                    </div>
-                                  }
-                                  placement="bottomCenter"
-                                >
-                                  <Link to="#">
-                                    <FeatherIcon icon="more-horizontal" size={16} />
-                                  </Link>
-                                </Dropdown>
-                                <Dropdown
-                                  action={['hover']}
-                                  content={
-                                    <div className="atbd-chatbox__emoji">
-                                      <ul>
-                                        <li>
-                                          <Link to="#">&#127773;</Link>
-                                        </li>
-                                        <li>
-                                          <Link to="#">&#128116;</Link>
-                                        </li>
-                                        <li>
-                                          <Link to="#">&#128127;</Link>
-                                        </li>
-                                        <li>
-                                          <Link to="#">&#128151;</Link>
-                                        </li>
-                                        <li>
-                                          <Link to="#">&#128400;</Link>
-                                        </li>
-                                        <li>
-                                          <Link to="#">
-                                            <MoreOutlined />
-                                          </Link>
-                                        </li>
-                                      </ul>
-                                    </div>
-                                  }
-                                  placement="bottomCenter"
-                                >
-                                  <Link to="#">
-                                    <SmileOutlined />
-                                  </Link>
-                                </Dropdown>
-                              </div>
                               <div className="atbd-chatbox__message">
                                 <MessageList className="message-box">{mes.content}</MessageList>
                               </div>
@@ -449,7 +324,8 @@ const SingleChat = ({ match }) => {
                           )}
                           {mes.sentBy === me && singleContent.length === index + 1 ? (
                             <div className="message-seen text-right">
-                              <span className="message-seen__time">Seen 9:20 PM </span>
+                              <span className="message-seen__time"> </span>
+                              {/* <span className="message-seen__time">Seen 9:20 PM </span> */}
                               <img src={mes.profileImage} alt="" />
                             </div>
                           ) : null}
@@ -485,11 +361,6 @@ const SingleChat = ({ match }) => {
                 />
               </div>
               <div className="chatbox-reply-action d-flex">
-                <Link to="#">
-                  <Upload {...attachment}>
-                    <FeatherIcon icon="paperclip" size={18} />
-                  </Upload>
-                </Link>
                 <Button onClick={handleSubmit} type="primary" className="btn-send">
                   <FeatherIcon icon="send" size={18} />
                 </Button>

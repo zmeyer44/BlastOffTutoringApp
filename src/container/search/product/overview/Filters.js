@@ -3,6 +3,8 @@ import FeatherIcon from 'feather-icons-react';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 import { Rate, Select } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
+import { useFirestoreConnect } from 'react-redux-firebase';
+
 import { Cards } from '../../../../components/cards/frame/cards-frame';
 import Heading from '../../../../components/heading/heading';
 import { Slider } from '../../../../components/slider/slider';
@@ -13,6 +15,13 @@ import { filterTutors, filterByBrand, filterByCategory } from '../../../../redux
 const { Option } = Select;
 
 const Filters = allTutors => {
+  const { schools } = useSelector(state => {
+    return {
+      schools: state.fs.ordered.schools,
+    };
+  });
+  useFirestoreConnect([{ collection: 'schools' }]);
+
   const [state, setState] = useState({
     subjects: [],
     schools: [],
@@ -98,7 +107,6 @@ const Filters = allTutors => {
       value: 1,
     },
   ];
-  const schools = ['North County', 'South Central', 'POB JFK HS', 'Bethpage High School', 'north-central'];
 
   const optionsStyle = [
     {
@@ -158,19 +166,29 @@ const Filters = allTutors => {
             onChange={subjectFilter}
           >
             <Option value="math">Math</Option>
-            <Option value="science">Science</Option>
             <Option value="english">English</Option>
-            <Option value="history">History</Option>
+            <Option value="biology">Biology</Option>
+            <Option value="chemistry">Chemistry</Option>
+            <Option value="social-studies">Social Studies</Option>
+            <Option value="spanish">Spanish</Option>
+            <Option value="french">French</Option>
+            <Option value="geometry">Geometry</Option>
+            <Option value="marketing">Marketing</Option>
+            <Option value="computer-science">Computer Science</Option>
+            <Option value="physics">Physics</Option>
           </Select>
         </SidebarSingle>
         <SidebarSingle style={{ marginBottom: 32 }}>
           <Heading as="h5">School</Heading>
           <Select showArrow mode="multiple" style={{ width: '100%' }} placeholder="All schools" onChange={schoolFilter}>
-            {schools.map(value => (
-              <Option key={value} value={value}>
-                {value}
-              </Option>
-            ))}
+            {schools &&
+              schools.map(school => {
+                return (
+                  <Option key={school.id} value={school.id}>
+                    {school.name}
+                  </Option>
+                );
+              })}
           </Select>
         </SidebarSingle>
 

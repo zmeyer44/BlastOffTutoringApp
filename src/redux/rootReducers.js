@@ -32,6 +32,8 @@ import { fsConvosReducer } from './firebase/messages/reducers';
 import firebaseAuth from './firebase/auth/reducers';
 import { calendarReducer } from './firebase/Calendar/reducers';
 import { sessionReducer, sessionSingleReducer } from './firebase/sessions/reducers';
+import { supportReducer } from './firebase/support/reducers';
+import { schoolReducer, schoolSingleReducer } from './firebase/schools/reducers';
 
 const rootReducers = combineReducers({
   fb: firebaseReducer,
@@ -68,12 +70,14 @@ const rootReducers = combineReducers({
   profile: fsProfileReducer,
   singleCrud: fsSingleCrudReducer,
   singleSession: sessionSingleReducer,
+  singleSchool: schoolSingleReducer,
+  support: supportReducer,
   cart: cartData,
-  Todo,
-  Note,
-  Task,
-  KanbanBoard: kanbanBoardReducer,
-  Contact,
+  // Todo,
+  // Note,
+  // Task,
+  // KanbanBoard: kanbanBoardReducer,
+  // Contact,
   firebaseAuth,
   FileManager,
 });

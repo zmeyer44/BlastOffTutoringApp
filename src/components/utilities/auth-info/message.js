@@ -1,21 +1,46 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Badge } from 'antd';
 import FeatherIcon from 'feather-icons-react';
-import { Link } from 'react-router-dom';
+import { Link, useRouteMatch } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useSelector } from 'react-redux';
+import { useFirestoreConnect } from 'react-redux-firebase';
+import moment from 'moment';
+import { textRefactor } from '../../../components/utilities/utilities';
 import { AtbdTopDropdwon } from './auth-info-style';
 import { Popover } from '../../popup/popup';
 import Heading from '../../heading/heading';
 
 const MessageBox = () => {
-  const { userMessages, rtl } = useSelector(state => {
+  const { path } = useRouteMatch();
+  const { convos, uid, isLoader, rtl } = useSelector(state => {
     return {
-      userMessages: state.fb.profile.newMessages,
+      convos: state.fs.data.conversations,
+      uid: state.fb.auth.uid,
+      isLoader: state.conversations.loading,
       rtl: state.ChangeLayoutMode.rtlData,
     };
   });
+  useFirestoreConnect([
+    { collection: 'conversations', where: ['users', 'array-contains', `${uid}`], orderBy: 'recentActivity' },
+  ]);
+  const [state, setState] = useState({
+    conversationsList: false,
+    loading: isLoader,
+  });
+
+  const { conversationsList, loading } = state;
+
+  useEffect(() => {
+    if (convos) {
+      let arrayOfConvos = Object.values(convos);
+      setState({
+        ...state,
+        conversationsList: arrayOfConvos,
+      });
+    }
+  }, [convos]);
 
   const renderThumb = ({ style, ...props }) => {
     const thumbStyle = {
@@ -55,11 +80,20 @@ const MessageBox = () => {
     style: PropTypes.shape(PropTypes.object),
   };
 
+  const notifications = convo => {
+    if (convo.notification && convo.notification.from !== uid) {
+      return true;
+    }
+  };
+
   const content = (
     <AtbdTopDropdwon className="atbd-top-dropdwon">
       <Heading className="atbd-top-dropdwon__title" as="h5">
         <span className="title-text">Messages</span>
-        <Badge className="badge-success" count={userMessages} />
+        <Badge
+          className="badge-success"
+          count={conversationsList.length && conversationsList.some(notifications) ? 'New' : 0}
+        />
       </Heading>
       <Scrollbars
         autoHeight
@@ -69,102 +103,67 @@ const MessageBox = () => {
         renderTrackVertical={renderTrackVertical}
       >
         <div className="atbd-top-dropdwon-menu">
-          <ul className="atbd-top-dropdwon__nav">
-            <li>
-              <Link to="#">
-                <figure className="atbd-top-dropdwon__content">
-                  <img src={require('../../../static/img/avatar/NoPath.png')} alt="" />
-                  <figcaption>
-                    <Heading as="h5">
-                      Software <span className="color-success">3 hrs ago</span>
-                    </Heading>
-                    <div>
-                      <span className="atbd-top-dropdwonText">Lorem ipsum dolor amet cosec...</span>
-                      <span>
-                        <Badge className="badge-success" count={3} />
-                      </span>
-                    </div>
-                  </figcaption>
-                </figure>
-              </Link>
-            </li>
-            <li>
-              <Link to="#">
-                <figure className="atbd-top-dropdwon__content">
-                  <img src={require('../../../static/img/avatar/NoPath.png')} alt="" />
-                  <figcaption>
-                    <Heading as="h5">
-                      Software <span className="color-success">3 hrs ago</span>
-                    </Heading>
-                    <div>
-                      <span className="atbd-top-dropdwonText">Lorem ipsum dolor amet cosec...</span>
-                      <span>
-                        <Badge className="badge-success" count={3} />
-                      </span>
-                    </div>
-                  </figcaption>
-                </figure>
-              </Link>
-            </li>
-            <li>
-              <Link to="#">
-                <figure className="atbd-top-dropdwon__content">
-                  <img src={require('../../../static/img/avatar/NoPath.png')} alt="" />
-                  <figcaption>
-                    <Heading as="h5">
-                      Software <span className="color-success">3 hrs ago</span>
-                    </Heading>
-                    <div>
-                      <span className="atbd-top-dropdwonText">Lorem ipsum dolor amet cosec...</span>
-                      <span>
-                        <Badge className="badge-success" count={3} />
-                      </span>
-                    </div>
-                  </figcaption>
-                </figure>
-              </Link>
-            </li>
-            <li>
-              <Link to="#">
-                <figure className="atbd-top-dropdwon__content">
-                  <img src={require('../../../static/img/avatar/NoPath.png')} alt="" />
-                  <figcaption>
-                    <Heading as="h5">
-                      Software <span className="color-success">3 hrs ago</span>
-                    </Heading>
-                    <div>
-                      <span className="atbd-top-dropdwonText">Lorem ipsum dolor amet cosec...</span>
-                      <span>
-                        <Badge className="badge-success" count={3} />
-                      </span>
-                    </div>
-                  </figcaption>
-                </figure>
-              </Link>
-            </li>
-            <li>
-              <Link to="#">
-                <figure className="atbd-top-dropdwon__content">
-                  <img src={require('../../../static/img/avatar/NoPath.png')} alt="" />
-                  <figcaption>
-                    <Heading as="h5">
-                      Software <span className="color-success">3 hrs ago</span>
-                    </Heading>
-                    <div>
-                      <span className="atbd-top-dropdwonText">Lorem ipsum dolor amet cosec...</span>
-                      <span>
-                        <Badge className="badge-success" count={3} />
-                      </span>
-                    </div>
-                  </figcaption>
-                </figure>
-              </Link>
-            </li>
-            <ul />
-          </ul>
+          {conversationsList.length ? (
+            <ul className="atbd-top-dropdwon__nav">
+              {conversationsList
+                .sort((a, b) => {
+                  return b.recentActivity - a.recentActivity;
+                })
+                .map((convo, key) => {
+                  const { messages, recentActivity } = convo;
+                  let user;
+                  let id;
+                  let content;
+                  let count = 0;
+                  if (convo.users[0] == uid) {
+                    user = convo.user2;
+                  } else {
+                    user = convo.user1;
+                  }
+                  if (messages.length) {
+                    id = messages[messages.length - 1].timestamp;
+                    content = messages[messages.length - 1].content;
+                  } else {
+                    id = recentActivity;
+                    content = ' ';
+                  }
+                  if (convo.notification && convo.notification.from == user.id) {
+                    count = convo.notification.count;
+                  }
+                  const same = moment(id).format('MM-DD-YYYY') === moment().format('MM-DD-YYYY');
+                  return (
+                    <li key={user.id}>
+                      <Link to={`${path}/chat/${user.id}`}>
+                        <figure className="atbd-top-dropdwon__content">
+                          <img src={user.profileImage} alt="" />
+                          <figcaption>
+                            <Heading as="h5">
+                              {user.name}{' '}
+                              <span className={count !== 0 ? 'color-success' : ' '}>
+                                {same ? moment(id).format('hh:mm A') : moment(id).format('dddd')}
+                              </span>
+                            </Heading>
+                            <div>
+                              <span className="atbd-top-dropdwonText">{textRefactor(content, 5)}</span>
+                              {count !== 0 && (
+                                <span>
+                                  <Badge className="badge-success" count={count} />
+                                </span>
+                              )}
+                            </div>
+                          </figcaption>
+                        </figure>
+                      </Link>
+                    </li>
+                  );
+                })}
+            </ul>
+          ) : (
+            <h3>No messages</h3>
+          )}
         </div>
       </Scrollbars>
-      <Link className="btn-seeAll" to="/messages">
+      <Link className="btn-seeAll" to={`${path}/chat`}>
         See all messages
       </Link>
     </AtbdTopDropdwon>
@@ -173,7 +172,7 @@ const MessageBox = () => {
   return (
     <div className="message">
       <Popover placement="bottomLeft" content={content} action="click">
-        {userMessages ? (
+        {conversationsList.length && conversationsList.some(notifications) ? (
           <Badge dot offset={[-8, -5]}>
             <Link to="#" className="head-example">
               <FeatherIcon icon="mail" size={20} />

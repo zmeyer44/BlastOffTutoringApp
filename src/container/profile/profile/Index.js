@@ -1,6 +1,8 @@
 import React, { lazy, Suspense } from 'react';
 import { useSelector } from 'react-redux';
 import { Row, Col, Skeleton } from 'antd';
+import { useFirestoreConnect } from 'react-redux-firebase';
+
 import FeatherIcon from 'feather-icons-react';
 import { NavLink, Switch, Route, useRouteMatch } from 'react-router-dom';
 import { SettingWrapper } from './overview/style';
@@ -12,36 +14,30 @@ import { ShareButtonPageHeader } from '../../../components/buttons/share-button/
 import { ExportButtonPageHeader } from '../../../components/buttons/export-button/export-button';
 import { CalendarButtonPageHeader } from '../../../components/buttons/calendar-button/calendar-button';
 
-const UserCards = lazy(() => import('../../pages/overview/UserCard'));
-const CoverSection = lazy(() => import('../overview/CoverSection'));
+const UserCard = lazy(() => import('./overview/UserCard'));
+const CoverSection = lazy(() => import('./overview/CoverSection'));
 const UserBio = lazy(() => import('./overview/UserBio'));
 const Overview = lazy(() => import('./overview/Overview'));
 const Timeline = lazy(() => import('./overview/Timeline'));
 const Activity = lazy(() => import('./overview/Activity'));
 
-const MyProfile = () => {
-  const { user, userId, isLoading, profileImage, isFileLoading } = useSelector(state => {
+const MyProfile = ({ match }) => {
+  const { user } = useSelector(state => {
     return {
-      user: state.fb.profile,
-      userId: state.fb.auth.uid,
-      isLoading: state.profile.loading,
-      profileImage: state.profile.profileImage,
-      isFileLoading: state.profile.fileLoading,
+      user: state.fs.data.selectedUser,
     };
   });
+  useFirestoreConnect([
+    {
+      collection: 'users',
+      doc: `${match.params.id}`,
+      storeAs: 'selectedUser',
+    },
+  ]);
   const { path } = useRouteMatch();
   return (
     <>
-      <PageHeader
-        ghost
-        title="My Profile"
-        buttons={[
-          <div key="1" className="page-header-actions">
-            <CalendarButtonPageHeader />
-            <ShareButtonPageHeader />
-          </div>,
-        ]}
-      />
+      <PageHeader ghost title="User Profile" />
 
       <Main>
         <Row gutter={25}>
@@ -53,22 +49,7 @@ const MyProfile = () => {
                 </Cards>
               }
             >
-              <UserCards
-                user={{
-                  name: `${user.name}`,
-                  designation: `${user.type}`,
-                  img: `${user.profileImage ? user.profileImage : '../../../static/img/avatar/profileImage.png'}`,
-                }}
-              />
-            </Suspense>
-            <Suspense
-              fallback={
-                <Cards headless>
-                  <Skeleton active paragraph={{ rows: 10 }} />
-                </Cards>
-              }
-            >
-              <UserBio {...user} />
+              <UserCard {...user} />
             </Suspense>
           </Col>
           <Col xxl={18} lg={16} md={14} xs={24}>
@@ -81,18 +62,18 @@ const MyProfile = () => {
                 }
               >
                 <div className="coverWrapper">
-                  <CoverSection />
+                  <CoverSection {...user}/>
                   <nav className="profileTab-menu">
                     <ul>
                       <li>
-                        <NavLink to={`${path}/overview`}>Overview</NavLink>
+                        <NavLink to={`/home/profile/${match.params.id}`}>Overview</NavLink>
                       </li>
-                      <li>
-                        <NavLink to={`${path}/timeline`}>Timeline</NavLink>
-                      </li>
-                      <li>
+                      {/* <li>
+                        <NavLink to={`${path}/reviews`}>Reviews</NavLink>
+                      </li> */}
+                      {/* <li>
                         <NavLink to={`${path}/activity`}>Activity</NavLink>
-                      </li>
+                      </li> */}
                     </ul>
                   </nav>
                 </div>
@@ -105,9 +86,9 @@ const MyProfile = () => {
                     </Cards>
                   }
                 >
-                  <Route exact path={`${path}/overview`} component={Overview} />
-                  <Route path={`${path}/timeline`} component={Timeline} />
-                  <Route path={`${path}/activity`} component={Activity} />
+                  <Route path={`${path}`} component={Overview} />
+                  {/* <Route path={`${path}/timeline`} component={Timeline} />
+                  <Route path={`${path}/activity`} component={Activity} /> */}
                 </Suspense>
               </Switch>
             </SettingWrapper>

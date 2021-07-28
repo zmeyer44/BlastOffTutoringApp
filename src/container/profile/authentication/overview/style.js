@@ -115,7 +115,6 @@ const AuthWrapper = Styled.div`
     align-items: center;
     justify-content: center;
     form{
-      width: 420px;
       h1{
         font-size: 24px;
         font-weight: 600;

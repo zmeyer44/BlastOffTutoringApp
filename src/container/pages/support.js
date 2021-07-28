@@ -26,17 +26,7 @@ const Support = () => {
     <>
       <PageHeader
         title="Support Center"
-        buttons={[
-          <div key="1" className="page-header-actions">
-            <CalendarButtonPageHeader />
-            <ExportButtonPageHeader />
-            <ShareButtonPageHeader />
-            <Button size="small" type="primary">
-              <FeatherIcon icon="plus" size={14} />
-              Add New
-            </Button>
-          </div>,
-        ]}
+        
       />
       <Main>
         <Row gutter={25}>
@@ -47,10 +37,12 @@ const Support = () => {
                   <Col lg={16} sm={14} xs={24}>
                     <div className="sDash_support-content">
                       <h2 className="sDash_support-content__title">Hello, We are here to help</h2>
-                      <p>You have questions and we hav answers! Don't hesitate to ask us whatever is on your mind.</p>
+                      <p>You have questions and we have answers! Don't hesitate to ask us whatever is on your mind.</p>
+                      <Link to='/home/ticket'>
                       <Button className="btn-ticket" size="large" type="primary" raised>
                         Create Support Ticket
                       </Button>
+                      </Link>
                     </div>
                   </Col>
 
@@ -73,10 +65,10 @@ const Support = () => {
                         </div>
                         <h4 className="sDash-support-link-item__title">Knowledgebase</h4>
                         <div className="sDash-support-link-item__content">
-                          <p>Lorem ipsum dolor sit amet consetetur</p>
-                          <Link to="./knowledgebase/plugins" className="btn-link">
+                          <p>See if we have provided an answer to your questions</p>
+                          {/* <Link to="./knowledgebase/plugins" className="btn-link">
                             Learn More
-                          </Link>
+                          </Link> */}
                         </div>
                       </div>
                     </Col>
@@ -87,10 +79,10 @@ const Support = () => {
                         </div>
                         <h4 className="sDash-support-link-item__title">FAQ</h4>
                         <div className="sDash-support-link-item__content">
-                          <p>Lorem ipsum dolor sit amet consetetur</p>
-                          <Link to="./faq" className="btn-link">
+                          <p>Ask us a question</p>
+                          {/* <Link to="./faq" className="btn-link">
                             Learn More
-                          </Link>
+                          </Link> */}
                         </div>
                       </div>
                     </Col>
@@ -101,10 +93,10 @@ const Support = () => {
                         </div>
                         <h4 className="sDash-support-link-item__title">Documentation</h4>
                         <div className="sDash-support-link-item__content">
-                          <p>Lorem ipsum dolor sit amet consetetur</p>
-                          <Link to="./documentation" className="btn-link">
+                          <p>View our documentation</p>
+                          {/* <Link to="./documentation" className="btn-link">
                             Learn More
-                          </Link>
+                          </Link> */}
                         </div>
                       </div>
                     </Col>
@@ -118,14 +110,9 @@ const Support = () => {
                         defaultActiveKey={['1']}
                         expandIcon={({ isActive }) => <FeatherIcon icon={isActive ? 'minus' : 'plus'} size={14} />}
                       >
-                        <Panel header="How long does it take to download updates?" key="1" style={customPanelStyle}>
+                        <Panel header="How do I start tutoring students?" key="1" style={customPanelStyle}>
                           <p>
-                            Many support queries and technical questions will already be answered in supporting
-                            documentation such as FAQ&rsquo;s and comments from previous buyers. Anim pariatur cliche
-                            reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon
-                            officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum
-                            eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee
-                            nulla assumenda shoreditch et.
+                            All tutors must first be approved by their school administrators prior to being eligible to chat with students. This ensures all tutors on our platform are vetted and verified. We take the saftey and security of our students seriously and want to cultivate a supportive and productive learning enviornment.
                           </p>
                           <Heading as="h4">Was this article helpful?</Heading>
                           <div className="panel-actions">
@@ -140,17 +127,12 @@ const Support = () => {
                           </div>
                         </Panel>
                         <Panel
-                          header="How to use SCSS variables to build custom color?"
+                          header="How to start a session?"
                           key="2"
                           style={customPanelStyle}
                         >
                           <p>
-                            Many support queries and technical questions will already be answered in supporting
-                            documentation such as FAQ&rsquo;s and comments from previous buyers. Anim pariatur cliche
-                            reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon
-                            officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum
-                            eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee
-                            nulla assumenda shoreditch et.
+                            On the "Sessions" page, tutors will have the option to create a new session. They can invite any of the students they have been chatting with the invite. The students are then able to accept the invitation and then join the session once the specified time has arrived. By clicking the "Join Call" button, users will be brought to our virtual lesson space where the session can takeplace. Once finished, students will be given the opportunity to review the tutor and confirm the session. This will grant the tutor the appriate amount of community service credit.
                           </p>
                           <Heading as="h4">Was this article helpful?</Heading>
                           <div className="panel-actions">
@@ -164,14 +146,9 @@ const Support = () => {
                             </Button>
                           </div>
                         </Panel>
-                        <Panel header="How long does it take to download updates?" key="3" style={customPanelStyle}>
+                        <Panel header="Printing your certificate" key="3" style={customPanelStyle}>
                           <p>
-                            Many support queries and technical questions will already be answered in supporting
-                            documentation such as FAQ&rsquo;s and comments from previous buyers. Anim pariatur cliche
-                            reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon
-                            officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum
-                            eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee
-                            nulla assumenda shoreditch et.
+                            When a tutor decides to use their community service credit for their resume, they could simply go to the "Certificate" page and print or download a copy of their certificate which show a curated list of all session which the tutor had lead.
                           </p>
                           <Heading as="h4">Was this article helpful?</Heading>
                           <div className="panel-actions">
@@ -185,14 +162,9 @@ const Support = () => {
                             </Button>
                           </div>
                         </Panel>
-                        <Panel header="What is the flex layout?" key="4" style={customPanelStyle}>
+                        <Panel header="What if a student never approves the sesson?" key="4" style={customPanelStyle}>
                           <p>
-                            Many support queries and technical questions will already be answered in supporting
-                            documentation such as FAQ&rsquo;s and comments from previous buyers. Anim pariatur cliche
-                            reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon
-                            officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum
-                            eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee
-                            nulla assumenda shoreditch et.
+                            If there is ever an issure with a student forgetting to approve a session, please contact our team at support@blastofftutoring.com so we could verify the claim and grant the appropriate community service credit.
                           </p>
                           <Heading as="h4">Was this article helpful?</Heading>
                           <div className="panel-actions">
@@ -206,14 +178,9 @@ const Support = () => {
                             </Button>
                           </div>
                         </Panel>
-                        <Panel header="How long does it take to download updates?" key="5" style={customPanelStyle}>
+                        <Panel header="How do I know when someone responds to a message?" key="5" style={customPanelStyle}>
                           <p>
-                            Many support queries and technical questions will already be answered in supporting
-                            documentation such as FAQ&rsquo;s and comments from previous buyers. Anim pariatur cliche
-                            reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon
-                            officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum
-                            eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee
-                            nulla assumenda shoreditch et.
+                            When ever a user sends you a message or creates a new invitation, you will receive an email notification alerting you to respond. If there are ever any issues with receiving emails please contact support@blastofftutoring.com for assistance.
                           </p>
                           <Heading as="h4">Was this article helpful?</Heading>
                           <div className="panel-actions">
@@ -227,14 +194,9 @@ const Support = () => {
                             </Button>
                           </div>
                         </Panel>
-                        <Panel header="Where to buy this UI dashboard?" key="6" style={customPanelStyle}>
+                        <Panel header="How long does my account last?" key="6" style={customPanelStyle}>
                           <p>
-                            Many support queries and technical questions will already be answered in supporting
-                            documentation such as FAQ&rsquo;s and comments from previous buyers. Anim pariatur cliche
-                            reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon
-                            officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum
-                            eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee
-                            nulla assumenda shoreditch et.
+                           In order to use our platform, schools must signup for a subscription. Subscriptions last 1 year and when renewed, all students from that school will be granted access to use the platform. If a school decided to take a year off, no accounts will be deleted, they will just be temporarily paused untill the school restarts their subscription.
                           </p>
                           <Heading as="h4">Was this article helpful?</Heading>
                           <div className="panel-actions">
@@ -248,7 +210,7 @@ const Support = () => {
                             </Button>
                           </div>
                         </Panel>
-                        <Panel header="How long does it take to download updates?" key="7" style={customPanelStyle}>
+                        {/* <Panel header="How long does it take to download updates?" key="7" style={customPanelStyle}>
                           <p>
                             Many support queries and technical questions will already be answered in supporting
                             documentation such as FAQ&rsquo;s and comments from previous buyers. Anim pariatur cliche
@@ -267,7 +229,7 @@ const Support = () => {
                               No
                             </Button>
                           </div>
-                        </Panel>
+                        </Panel> */}
                       </Collapse>
                     </FaqWrapper>
                   </Cards>

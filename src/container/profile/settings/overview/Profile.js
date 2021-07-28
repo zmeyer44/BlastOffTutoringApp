@@ -79,23 +79,43 @@ const Profile = () => {
                 <Form.Item name="bio" rules={[{ required: true, message: 'Please input your bio!' }]} label="User bio">
                   <Input.TextArea rows={3} />
                 </Form.Item>
-                <Form.Item name="grades" rules={[{ required: true }]} label="Grade Range">
-                  <Slider range defaultValues={user.grades ? user.grades : [1, 5]} min={1} max={12} />
-                </Form.Item>
-                <Form.Item name="subjects" label="Subjects" rules={[{ required: true }]}>
-                  <Select mode="multiple" allowClear style={{ width: '100%' }} placeholder="Please select">
-                    <Option value="english">English</Option>
-                    <Option value="math">Math</Option>
-                    <Option value="science">Science</Option>
-                    <Option value="history">History</Option>
-                  </Select>
-                </Form.Item>
-                <Form.Item name="active" label="Status" rules={[{ required: true }]}>
-                  <Radio.Group>
-                    <Radio value={true}>Active</Radio>
-                    <Radio value={false}>Deactivated</Radio>
-                  </Radio.Group>
-                </Form.Item>
+                {user.type == 'Tutor' ? (
+                  <>
+                    <Form.Item
+                      name="grades"
+                      rules={[{ required: true }]}
+                      label={`Grade Range: ${user.grades && user.grades[0]} - ${user.grades && user.grades[1]}`}
+                    >
+                      <Slider range defaultValues={user.grades ? user.grades : [1, 5]} min={1} max={12} />
+                    </Form.Item>
+                    <Form.Item name="subjects" label="Subjects" rules={[{ required: true }]}>
+                      <Select mode="multiple" allowClear style={{ width: '100%' }} placeholder="Please select">
+                        <Option value="math">Math</Option>
+                        <Option value="english">English</Option>
+                        <Option value="biology">Biology</Option>
+                        <Option value="chemistry">Chemistry</Option>
+                        <Option value="social-studies">Social Studies</Option>
+                        <Option value="spanish">Spanish</Option>
+                        <Option value="french">French</Option>
+                        <Option value="geometry">Geometry</Option>
+                        <Option value="marketing">Marketing</Option>
+                        <Option value="computer-science">Computer Science</Option>
+                        <Option value="physics">Physics</Option>
+                      </Select>
+                    </Form.Item>
+                    <Form.Item name="active" label="Status" rules={[{ required: true }]}>
+                      <Radio.Group>
+                        <Radio value={true}>Active</Radio>
+                        <Radio value={false}>Deactivated</Radio>
+                      </Radio.Group>
+                    </Form.Item>
+                  </>
+                ) : (
+                  <Form.Item name="grade" rules={[{ required: true }]} label={`Grade: ${user.grade && user.grade}`}>
+                    <Slider defaultValues={user.grade ? user.grade : 5} min={1} max={12} />
+                  </Form.Item>
+                )}
+
                 <div className="setting-form-actions">
                   <Button size="default" htmlType="submit" type="primary">
                     {isLoading ? 'Loading...' : 'Update Profile'}

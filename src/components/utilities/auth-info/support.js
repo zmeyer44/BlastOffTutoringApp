@@ -1,42 +1,46 @@
 import React from 'react';
 import FeatherIcon from 'feather-icons-react';
-import { Link } from 'react-router-dom';
+import { Link, useRouteMatch } from 'react-router-dom';
 import { NestedDropdwon } from './auth-info-style';
 import { Popover } from '../../popup/popup';
 import Heading from '../../heading/heading';
 
 const Support = () => {
+  const { path } = useRouteMatch();
   const content = (
     <NestedDropdwon>
       <div className="support-dropdwon">
         <ul>
-          <Heading as="h5">Documentation</Heading>
+          <Heading as="h5">How to use?</Heading>
           <li>
-            <Link to="#">How to customize admin</Link>
+            <Link to={`${path}/support`}>How to find a tutor</Link>
           </li>
           <li>
-            <Link to="#">How to use</Link>
+            <Link to={`${path}/support`}>Chatting with tutors</Link>
           </li>
           <li>
-            <Link to="#">The relation of vertical spacing</Link>
-          </li>
-        </ul>
-        <ul>
-          <Heading as="h5">Payments</Heading>
-          <li>
-            <Link to="#">How to customize admin</Link>
-          </li>
-          <li>
-            <Link to="#">How to use</Link>
+            <Link to={`${path}/support`}>Getting more opportunities</Link>
           </li>
         </ul>
         <ul>
-          <Heading as="h5">Content Planner</Heading>
+          <Heading as="h5">Sessions</Heading>
           <li>
-            <Link to="#">How to customize admin</Link>
+            <Link to={`${path}/support`}>How to start a session</Link>
           </li>
           <li>
-            <Link to="#">How to use</Link>
+            <Link to={`${path}/support`}>Sending invites</Link>
+          </li>
+          <li>
+            <Link to={`${path}/support`}>Printing my certificate</Link>
+          </li>
+        </ul>
+        <ul>
+          <Heading as="h5">Approval process</Heading>
+          <li>
+            <Link to={`${path}/support`}>How to approve students</Link>
+          </li>
+          <li>
+            <Link to={`${path}/support`}>How to confirm students</Link>
           </li>
         </ul>
       </div>

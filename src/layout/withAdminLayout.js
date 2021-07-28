@@ -312,13 +312,13 @@ const ThemeLayout = WrappedComponent => {
                       </Col>
                       <Col md={12} xs={24}>
                         <div className="admin-footer__links">
-                          <a href="https://blastofftutoring.com/about" target="_blank">
+                          <a href="https://blastofftutoring.com/" target="_blank">
                             About
                           </a>
-                          <a href="https://blastofftutoring.com/team" target="_blank">
+                          <a href="https://blastofftutoring.com/" target="_blank">
                             Team
                           </a>
-                          <a href="https://blastofftutoring.com/contact" target="_blank">
+                          <a href="https://blastofftutoring.com/" target="_blank">
                             Contact
                           </a>
                         </div>

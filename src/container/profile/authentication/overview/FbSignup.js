@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useLayoutEffect } from 'react'
 import { Link, NavLink, useHistory } from 'react-router-dom';
 import { FacebookOutlined, TwitterOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { Row, Col, Form, Input, Button, Select, Radio, Table, Tooltip, InputNumber } from 'antd';
+import { useFirestoreConnect } from 'react-redux-firebase';
 import { useDispatch, useSelector } from 'react-redux';
 import FeatherIcon from 'feather-icons-react';
 import { AuthWrapper } from './style';
@@ -26,6 +27,7 @@ const SignUp = () => {
     isSchoolChecking,
     isSchoolErr,
     isSchoolWrong,
+    schools,
   } = useSelector(state => {
     return {
       isSignUpError: state.firebaseAuth.isSignUpError,
@@ -35,8 +37,11 @@ const SignUp = () => {
       isSchoolChecking: state.firebaseAuth.isSchoolAuthLoading,
       isSchoolErr: state.firebaseAuth.isSchoolAuthError,
       isSchoolWrong: state.firebaseAuth.isSchoolAuthWrong,
+      schools: state.fs.ordered.schools,
     };
   });
+  useFirestoreConnect([{ collection: 'schools' }]);
+
   const [form] = Form.useForm();
 
   const [state, setState] = useState({
@@ -72,8 +77,16 @@ const SignUp = () => {
     schoolAuth(state.school, state.code);
   };
   const createAccount = () => {
-    console.log('Account Create dispatched');
-    dispatch(fbAuthSignUp(state));
+    dispatch(
+      fbAuthSignUp({
+        password: state.password,
+        firstName: state.firstName,
+        lastName: state.lastName,
+        email: state.email,
+        school: state.school,
+        type: state.type,
+      }),
+    );
   };
 
   useEffect(() => {
@@ -110,10 +123,9 @@ const SignUp = () => {
     });
   };
 
-  const schools = ['North County', 'South Central', 'POB JFK HS', 'Bethpage High School'];
   const forms = [
     <Form
-      name="school"
+      name="schoolForm"
       form={form}
       onValuesChange={handleChange}
       onFinish={() => findSchool()}
@@ -123,14 +135,21 @@ const SignUp = () => {
       <Heading as="h3" style={{ marginBottom: '40px', marginTop: '25px' }}>
         1. Find your <span className="color-secondary">School</span>
       </Heading>
-      <Form.Item name="school" label="School" rules={[{ required: true }]}>
-        <Select showSearch size="large" style={{ width: '100%' }} placeholder="Please select">
-          {schools.map(value => (
-            <Option key={value} value={value}>
-              {value}
-            </Option>
-          ))}
-          <Option value="north-central">Correct</Option>
+      <Form.Item
+        name="school"
+        initialValue="Find your school"
+        label="School"
+        rules={[{ required: true, message: 'Please select a school' }]}
+      >
+        <Select style={{ width: '100%' }}>
+          {schools &&
+            schools.map(school => {
+              return (
+                <Option key={school.id} value={school.id}>
+                  {school.name}
+                </Option>
+              );
+            })}
         </Select>
       </Form.Item>
       <Form.Item

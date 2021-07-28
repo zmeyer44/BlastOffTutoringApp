@@ -15,8 +15,8 @@ const Features = () => {
             <figure className="setting-dropdwon__single d-flex">
               <img src={require('../../../static/img/icon/014-document.png')} alt="" />
               <figcaption>
-                <Heading as="h5">All Features</Heading>
-                <p>Introducing Increment subscriptions </p>
+                <Heading as="h5">Send Messages</Heading>
+                <p>Chat with tutors</p>
               </figcaption>
             </figure>
           </Col>
@@ -24,8 +24,8 @@ const Features = () => {
             <figure className="setting-dropdwon__single d-flex">
               <img src={require('../../../static/img/icon/015-color-palette.png')} alt="" />
               <figcaption>
-                <Heading as="h5">Themes</Heading>
-                <p>Third party themes that are compatible </p>
+                <Heading as="h5">Find Tutors</Heading>
+                <p>View our large library of tutors </p>
               </figcaption>
             </figure>
           </Col>
@@ -33,8 +33,8 @@ const Features = () => {
             <figure className="setting-dropdwon__single d-flex">
               <img src={require('../../../static/img/icon/010-home.png')} alt="" />
               <figcaption>
-                <Heading as="h5">Payments</Heading>
-                <p>We handle billions of dollars </p>
+                <Heading as="h5">Local</Heading>
+                <p>Filter tutors by school </p>
               </figcaption>
             </figure>
           </Col>
@@ -42,8 +42,8 @@ const Features = () => {
             <figure className="setting-dropdwon__single d-flex">
               <img src={require('../../../static/img/icon/017-video-camera.png')} alt="" />
               <figcaption>
-                <Heading as="h5">Design Mockups</Heading>
-                <p>Share planning visuals with clients </p>
+                <Heading as="h5">Video Chat</Heading>
+                <p>Video chat with tutors in our learning space </p>
               </figcaption>
             </figure>
           </Col>
@@ -51,8 +51,8 @@ const Features = () => {
             <figure className="setting-dropdwon__single d-flex">
               <img src={require('../../../static/img/icon/013-document-1.png')} alt="" />
               <figcaption>
-                <Heading as="h5">Content Planner</Heading>
-                <p>Centralize content gathering and editing</p>
+                <Heading as="h5">Print Certificate</Heading>
+                <p>Download your tutoring certificate</p>
               </figcaption>
             </figure>
           </Col>
@@ -60,8 +60,8 @@ const Features = () => {
             <figure className="setting-dropdwon__single d-flex">
               <img src={require('../../../static/img/icon/007-microphone-1.png')} alt="" />
               <figcaption>
-                <Heading as="h5">Diagram Maker</Heading>
-                <p>Plan user flows & test scenarios</p>
+                <Heading as="h5">Quality Audio</Heading>
+                <p>High quality audio and video</p>
               </figcaption>
             </figure>
           </Col>

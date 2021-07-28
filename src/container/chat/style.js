@@ -357,9 +357,9 @@ const Footer = Styled.div`
     position: relative;
     margin-top: 20px;
     align-items: center;
-    @media only screen and (max-width: 575px){
+    /* @media only screen and (max-width: 575px){
       flex-flow: column;
-    }
+    } */
     .smile-icon{
       position: relative; 
       position: absolute;

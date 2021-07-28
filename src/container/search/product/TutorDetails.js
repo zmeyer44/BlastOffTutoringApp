@@ -39,17 +39,7 @@ const TutorDetails = ({ match }) => {
       <PageHeader
         ghost
         title="Product Details"
-        buttons={[
-          <div key="1" className="page-header-actions">
-            <CalendarButtonPageHeader key="1" />
-            <ExportButtonPageHeader key="2" />
-            <ShareButtonPageHeader key="3" />
-            <Button size="small" key="4" type="primary">
-              <FeatherIcon icon="plus" size={14} />
-              Add New
-            </Button>
-          </div>,
-        ]}
+        
       />
       <Main>
         <Cards headless>

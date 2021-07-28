@@ -70,6 +70,7 @@ const AllContacts = ({ match }) => {
                 let user;
                 let id;
                 let content;
+                let count;
                 if (convo.users[0] == uid) {
                   user = convo.user2;
                 } else {
@@ -81,6 +82,11 @@ const AllContacts = ({ match }) => {
                 } else {
                   id = recentActivity;
                   content = ' ';
+                }
+                // console.log('Convo Notification: ', convo.notification.from);
+                // console.log('user: ', user);
+                if (convo.notification && convo.notification.from == user.id) {
+                  count = convo.notification.count;
                 }
                 // const id = messages[messages.length - 1].time;
                 const same = moment(id).format('MM-DD-YYYY') === moment().format('MM-DD-YYYY');
@@ -98,7 +104,8 @@ const AllContacts = ({ match }) => {
                       </div>
                       <div className="author-chatMeta">
                         <BlockSpan>{same ? moment(id).format('hh:mm A') : moment(id).format('dddd')}</BlockSpan>
-                        {/* {key <= 1 && <Badge className="badge-success" count={3} />} */}
+
+                        {count !== 0 && <Badge className="badge-success" count={count} />}
                       </div>
                     </NavLink>
                   </li>

@@ -9,6 +9,7 @@ import Heading from '../../../../components/heading/heading';
 import { Cards } from '../../../../components/cards/frame/cards-frame';
 import { fbFileUploder, fbFileClear, fbDataUpdate } from '../../../../redux/firebase/profile/actionCreator';
 import ImgCrop from 'antd-img-crop';
+import './style.css';
 
 const AuthorBox = () => {
   const dispatch = useDispatch();

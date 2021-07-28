@@ -6,53 +6,40 @@ import { UserBioBox } from './style';
 import { Cards } from '../../../../components/cards/frame/cards-frame';
 import { Button } from '../../../../components/buttons/buttons';
 
-const UserBio = () => {
+const UserBio = (user) => {
   return (
     <UserBioBox>
-      <Cards headless>
+      <Cards title="Tutor Overview">
         <article className="user-info">
-          <h5 className="user-info__title">User Bio</h5>
-          <p>
-            Nam malesuada dolor tellus pretium amet was hendrerit facilisi id vitae enim sed ornare there suspendisse
-            sed orci neque ac sed aliquet risus faucibus in pretium molestie nisl tempor quis odio habitant.
-          </p>
+          <h5 className="user-info__title">Tutor Bio</h5>
+          <p>{user.bio}</p>
         </article>
         <address className="user-info">
-          <h5 className="user-info__title">Contact Info</h5>
+          <h5 className="user-info__title">Additional Info</h5>
           <ul className="user-info__contact">
             <li>
-              <FeatherIcon icon="mail" size={14} /> <span>Clayton@example.com</span>
+              <FeatherIcon icon="home" size={14} /> <span>{user.school}</span>
             </li>
             <li>
-              <FeatherIcon icon="phone" size={14} /> <span>+44 (0161) 347 8854</span>
-            </li>
-            <li>
-              <FeatherIcon icon="globe" size={14} /> <span>www.example.com</span>
+              <FeatherIcon icon="mail" size={14} /> <span>{user.email}</span>
             </li>
           </ul>
         </address>
         <div className="user-info">
           <h5 className="user-info__title">Skills</h5>
           <div className="user-info__skills">
-            <Button type="light" outlined className="btn-outlined">
-              UI/UX
-            </Button>
-            <Button type="light" outlined className="btn-outlined">
-              Branding
-            </Button>
-            <Button type="light" outlined className="btn-outlined">
-              product design
-            </Button>
-            <Button type="light" outlined className="btn-outlined">
-              web design
-            </Button>
-            <Button type="light" outlined className="btn-outlined">
-              Application
-            </Button>
+            {user.subjects &&
+              user.subjects.map(subject => {
+                return (
+                  <Button type="light" outlined className="btn-outlined">
+                    {subject}
+                  </Button>
+                );
+              })}
           </div>
         </div>
-        <div className="user-info">
-          <h5 className="user-info__title">Social Profiles</h5>
+        {/* <div className="user-info">
+          <h5 className="user-info__title">Acheivments</h5>
           <div className="card__social">
             <Link className="btn-icon facebook" to="#">
               <FontAwesome name="facebook" />
@@ -67,7 +54,7 @@ const UserBio = () => {
               <FontAwesome name="instagram" />
             </Link>
           </div>
-        </div>
+        </div> */}
       </Cards>
     </UserBioBox>
   );
