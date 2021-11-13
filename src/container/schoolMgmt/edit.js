@@ -4,6 +4,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFirestoreConnect } from 'react-redux-firebase';
 import FeatherIcon from 'feather-icons-react';
+import firebase from 'firebase/app';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import { RecordFormWrapper } from './style';
@@ -21,14 +22,35 @@ const Edit = ({ match }) => {
   const history = useHistory();
   const slug = match.params.id;
 
-  const { selectedSchool, isLoading } = useSelector(state => {
-    return {
-      selectedSchool: state.fs.data.school,
-      isLoading: state.singleSchool.loading,
-    };
-  });
-  useFirestoreConnect([{ collection: 'schools', doc: `${slug}`, storeAs: 'school' }]);
+  const [selectedSchool, setSelectedSchool] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
+  // const { selectedSchool, isLoading } = useSelector(state => {
+  //   return {
+  //     selectedSchool: state.fs.data.school,
+  //     isLoading: state.singleSchool.loading,
+  //   };
+  // });
+  // useFirestoreConnect([{ collection: 'schools', doc: `${slug}`, storeAs: 'school' }]);
+  const getSchoolInfo = async () => {
+    try {
+      const result = await firebase
+        .firestore()
+        .collection('schools')
+        .doc(slug)
+        .get();
+      return result.data();
+    } catch (error) {
+      console.error('Error writing document: ', error);
+    }
+  };
+
+  useEffect(() => {
+    getSchoolInfo()
+      .then(r => setSelectedSchool(r))
+      .then(() => setIsLoading(false))
+      .catch(err => console.error(err));
+  }, [slug]);
   const [state, setState] = useState({
     join: '',
   });

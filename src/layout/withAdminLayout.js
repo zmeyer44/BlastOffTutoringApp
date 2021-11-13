@@ -232,14 +232,14 @@ const ThemeLayout = WrappedComponent => {
                           <FeatherIcon icon="search" />
                           <FeatherIcon icon="x" />
                         </Link>
-                        <div className={`${activeSearch ? 'topMenu-search-form show' : 'topMenu-search-form'}`}>
+                        {/* <div className={`${activeSearch ? 'topMenu-search-form show' : 'topMenu-search-form'}`}>
                           <form action="">
                             <span className="search-icon">
                               <FeatherIcon icon="search" />
                             </span>
                             <input type="text" name="search" />
                           </form>
-                        </div>
+                        </div> */}
                         <AuthInfo />
                       </div>
                     </TopMenuSearch>
@@ -251,9 +251,9 @@ const ThemeLayout = WrappedComponent => {
                 <Col md={0} sm={18} xs={12}>
                   <>
                     <div className="mobile-action">
-                      <Link className="btn-search" onClick={handleSearchHide} to="#">
+                      {/* <Link className="btn-search" onClick={handleSearchHide} to="#">
                         {searchHide ? <FeatherIcon icon="search" /> : <FeatherIcon icon="x" />}
-                      </Link>
+                      </Link> */}
                       <Link className="btn-auth" onClick={onShowHide} to="#">
                         <FeatherIcon icon="more-vertical" />
                       </Link>

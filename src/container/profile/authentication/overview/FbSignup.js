@@ -204,7 +204,6 @@ const SignUp = () => {
         <Select style={{ width: '100%' }} placeholder="Please select">
           <Option value="Student">Student</Option>
           <Option value="Tutor">Tutor</Option>
-          <Option value="Parent">Parent</Option>
         </Select>
       </Form.Item>
 

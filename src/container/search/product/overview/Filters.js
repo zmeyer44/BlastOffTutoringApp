@@ -178,7 +178,7 @@ const Filters = allTutors => {
             <Option value="physics">Physics</Option>
           </Select>
         </SidebarSingle>
-        <SidebarSingle style={{ marginBottom: 32 }}>
+        {/* <SidebarSingle style={{ marginBottom: 32 }}>
           <Heading as="h5">School</Heading>
           <Select showArrow mode="multiple" style={{ width: '100%' }} placeholder="All schools" onChange={schoolFilter}>
             {schools &&
@@ -190,7 +190,7 @@ const Filters = allTutors => {
                 );
               })}
           </Select>
-        </SidebarSingle>
+        </SidebarSingle> */}
 
         <SidebarSingle style={{ marginBottom: 32 }}>
           <Heading as="h5">Learning Style</Heading>

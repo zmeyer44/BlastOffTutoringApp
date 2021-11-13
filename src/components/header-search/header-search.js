@@ -37,7 +37,11 @@ const HeaderSearch = ({ darkMode }) => {
 
   return (
     <>
-      <Div className="certain-category-search-wrapper" style={{ width: '100%' }} darkMode={darkMode}>
+      <Div
+        className="certain-category-search-wrapper"
+        style={{ width: '100%', opacity: 0, pointerEvents: 'none' }}
+        darkMode={darkMode}
+      >
         <Row className="ant-row-middle">
           <Col md={2} xs={1} className={rtl ? 'text-left' : 'text-right'}>
             <span className="certain-category-icon">

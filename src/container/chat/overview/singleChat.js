@@ -123,10 +123,7 @@ const SingleChat = ({ match }) => {
     if (state.chatData) {
       console.log('dispatching');
 
-      if (
-        state.chatData.notification &&
-        state.chatData.notification.from !== uid && state.chatData.notification.from == null
-      ) {
+      if (state.chatData.notification?.from !== null && state.chatData.notification?.from !== uid) {
         dispatch(setRead(state.chatData, null));
       }
     }

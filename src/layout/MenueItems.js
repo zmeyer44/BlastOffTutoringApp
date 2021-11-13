@@ -55,7 +55,7 @@ const MenueItems = ({ darkMode, toggleCollapsed, topMenu, events }) => {
       overflowedIndicator={<FeatherIcon icon="more-vertical" />}
       openKeys={openKeys}
     >
-     <Menu.Item
+      <Menu.Item
         icon={
           !topMenu && (
             <NavLink className="menuItem-iocn" to={`${path}/`}>
@@ -69,53 +69,51 @@ const MenueItems = ({ darkMode, toggleCollapsed, topMenu, events }) => {
           Dashboard
         </NavLink>
       </Menu.Item>
-    
+
       {userType !== 'School' && (
         <>
-        <Menu.Item
-        icon={
-          !topMenu && (
-            <NavLink className="menuItem-iocn" to={`${path}/search`}>
-              <FeatherIcon icon="search" />
+          <Menu.Item
+            icon={
+              !topMenu && (
+                <NavLink className="menuItem-iocn" to={`${path}/search`}>
+                  <FeatherIcon icon="search" />
+                </NavLink>
+              )
+            }
+            key="search"
+          >
+            <NavLink onClick={toggleCollapsed} to={`${path}/search`}>
+              Find a Tutor
             </NavLink>
-          )
-        }
-        key="search"
-      >
-        <NavLink onClick={toggleCollapsed} to={`${path}/search`}>
-          Find a Tutor
-        </NavLink>
-      </Menu.Item>
-        <Menu.Item
-        icon={
-          !topMenu && (
-            <NavLink className="menuItem-iocn" to={`${path}/sessions/view`}>
-              <FeatherIcon icon="send" />
+          </Menu.Item>
+          <Menu.Item
+            icon={
+              !topMenu && (
+                <NavLink className="menuItem-iocn" to={`${path}/sessions/view`}>
+                  <FeatherIcon icon="send" />
+                </NavLink>
+              )
+            }
+            key="sessions"
+          >
+            <NavLink onClick={toggleCollapsed} to={`${path}/sessions/view`}>
+              View Sessions
             </NavLink>
-          )
-        }
-        key="sessions"
-      >
-        <NavLink onClick={toggleCollapsed} to={`${path}/sessions/view`}>
-          View Sessions
-        </NavLink>
-      </Menu.Item>
-        <Menu.Item
-        icon={
-          !topMenu && (
-            <NavLink className="menuItem-iocn" to={`${path}/chat`}>
-              <FeatherIcon icon="message-square" />
+          </Menu.Item>
+          <Menu.Item
+            icon={
+              !topMenu && (
+                <NavLink className="menuItem-iocn" to={`${path}/chat`}>
+                  <FeatherIcon icon="message-square" />
+                </NavLink>
+              )
+            }
+            key="chat"
+          >
+            <NavLink onClick={toggleCollapsed} to={`${path}/chat`}>
+              Chat
             </NavLink>
-          )
-        }
-        key="chat"
-      >
-        <NavLink onClick={toggleCollapsed} to={`${path}/chat`}>
-          Chat
-        </NavLink>
-      </Menu.Item>
-          
-      
+          </Menu.Item>
         </>
       )}
       <Menu.Item
@@ -145,20 +143,20 @@ const MenueItems = ({ darkMode, toggleCollapsed, topMenu, events }) => {
         <>
           {!topMenu && <p className="sidebar-nav-title">My Account</p>}
           <Menu.Item
-        icon={
-          !topMenu && (
-            <NavLink className="menuItem-iocn" to={`${path}/settings`}>
-              <FeatherIcon icon="user" />
+            icon={
+              !topMenu && (
+                <NavLink className="menuItem-iocn" to={`${path}/settings`}>
+                  <FeatherIcon icon="user" />
+                </NavLink>
+              )
+            }
+            key="profile"
+          >
+            <NavLink onClick={toggleCollapsed} to={`${path}/settings`}>
+              Profile
             </NavLink>
-          )
-        }
-        key="profile"
-      >
-        <NavLink onClick={toggleCollapsed} to={`${path}/settings`}>
-          Profile
-        </NavLink>
-      </Menu.Item>
-          
+          </Menu.Item>
+
           <SubMenu key="inbox" icon={!topMenu && <FeatherIcon icon="inbox" />} title="Inbox">
             <Menu.Item key="messages">
               <NavLink onClick={toggleCollapsed} to={`${path}/chat`}>
@@ -196,68 +194,66 @@ const MenueItems = ({ darkMode, toggleCollapsed, topMenu, events }) => {
             </Menu.Item>
           </SubMenu>
           <Menu.Item
-        icon={
-          !topMenu && (
-            <NavLink className="menuItem-iocn" to={`${path}/sessions/certificate`}>
-              <FeatherIcon icon="award" />
+            icon={
+              !topMenu && (
+                <NavLink className="menuItem-iocn" to={`${path}/sessions/certificate`}>
+                  <FeatherIcon icon="award" />
+                </NavLink>
+              )
+            }
+            key="certificate"
+          >
+            <NavLink onClick={toggleCollapsed} to={`${path}/sessions/certificate`}>
+              Certificate
             </NavLink>
-          )
-        }
-        key="certificate"
-      >
-        <NavLink onClick={toggleCollapsed} to={`${path}/sessions/certificate`}>
-          Certificate
-        </NavLink>
-      </Menu.Item>
-          
+          </Menu.Item>
         </>
       )}
       {userType == 'School' && (
         <>
           {!topMenu && <p className="sidebar-nav-title">My School</p>}
           <Menu.Item
-        icon={
-          !topMenu && (
-            <NavLink className="menuItem-iocn" to={`${path}/students/view`}>
-              <FeatherIcon icon="users" />
+            icon={
+              !topMenu && (
+                <NavLink className="menuItem-iocn" to={`${path}/students`}>
+                  <FeatherIcon icon="users" />
+                </NavLink>
+              )
+            }
+            key="students"
+          >
+            <NavLink onClick={toggleCollapsed} to={`${path}/students`}>
+              Approve Students
             </NavLink>
-          )
-        }
-        key="students"
-      >
-        <NavLink onClick={toggleCollapsed} to={`${path}/students/view`}>
-          All Students
-        </NavLink>
-      </Menu.Item>
+          </Menu.Item>
+          {/* <Menu.Item
+            icon={
+              !topMenu && (
+                <NavLink className="menuItem-iocn" to={`${path}/students/view/pending`}>
+                  <FeatherIcon icon="user-plus" />
+                </NavLink>
+              )
+            }
+            key="pendingAccounts"
+          >
+            <NavLink onClick={toggleCollapsed} to={`${path}/students/view/pending`}>
+              Pending Accounts
+            </NavLink>
+          </Menu.Item>
           <Menu.Item
-        icon={
-          !topMenu && (
-            <NavLink className="menuItem-iocn" to={`${path}/students/view/pending`}>
-              <FeatherIcon icon="user-plus" />
+            icon={
+              !topMenu && (
+                <NavLink className="menuItem-iocn" to={`${path}/students/view/approved`}>
+                  <FeatherIcon icon="user-check" />
+                </NavLink>
+              )
+            }
+            key="approvedAccounts"
+          >
+            <NavLink onClick={toggleCollapsed} to={`${path}/students/view/approved`}>
+              Approved Accounts
             </NavLink>
-          )
-        }
-        key="pendingAccounts"
-      >
-        <NavLink onClick={toggleCollapsed} to={`${path}/students/view/pending`}>
-          Pending Accounts
-        </NavLink>
-      </Menu.Item>
-          <Menu.Item
-        icon={
-          !topMenu && (
-            <NavLink className="menuItem-iocn" to={`${path}/students/view/approved`}>
-              <FeatherIcon icon="user-check" />
-            </NavLink>
-          )
-        }
-        key="approvedAccounts"
-      >
-        <NavLink onClick={toggleCollapsed} to={`${path}/students/view/approved`}>
-          Approved Accounts
-        </NavLink>
-      </Menu.Item>
-    
+          </Menu.Item> */}
         </>
       )}
       {userType == 'Admin' && (
@@ -265,18 +261,8 @@ const MenueItems = ({ darkMode, toggleCollapsed, topMenu, events }) => {
           {!topMenu && <p className="sidebar-nav-title">Admin Controls</p>}
           <SubMenu key="accounts" icon={!topMenu && <FeatherIcon icon="users" />} title="Accounts">
             <Menu.Item key="allAccounts">
-              <NavLink onClick={toggleCollapsed} to={`${path}/accounts`}>
-                Messages
-              </NavLink>
-            </Menu.Item>
-            <Menu.Item key="pendingAccounts">
-              <NavLink onClick={toggleCollapsed} to={`${path}/pendingAccounts`}>
-                Pending Accounts
-              </NavLink>
-            </Menu.Item>
-            <Menu.Item key="requests">
-              <NavLink onClick={toggleCollapsed} to={`${path}/approvedAccounts`}>
-                Approved Accounts
+              <NavLink onClick={toggleCollapsed} to={`${path}/students`}>
+                All Pending Students
               </NavLink>
             </Menu.Item>
           </SubMenu>
@@ -293,40 +279,39 @@ const MenueItems = ({ darkMode, toggleCollapsed, topMenu, events }) => {
             </Menu.Item>
           </SubMenu>
           <Menu.Item
-        icon={
-          !topMenu && (
-            <NavLink className="menuItem-iocn" to={`${path}/edituser`}>
-              <FeatherIcon icon="tool" />
+            icon={
+              !topMenu && (
+                <NavLink className="menuItem-iocn" to={`${path}/edituser`}>
+                  <FeatherIcon icon="tool" />
+                </NavLink>
+              )
+            }
+            key="editUser"
+          >
+            <NavLink onClick={toggleCollapsed} to={`${path}/edituser`}>
+              Edit User
             </NavLink>
-          )
-        }
-        key="editUser"
-      >
-        <NavLink onClick={toggleCollapsed} to={`${path}/edituser`}>
-          Edit User
-        </NavLink>
-      </Menu.Item>
-
-        
+          </Menu.Item>
         </>
       )}
 
       {!topMenu && <p className="sidebar-nav-title">Utilities</p>}
-      {!userType == 'School' && <Menu.Item
-        icon={
-          !topMenu && (
-            <NavLink className="menuItem-iocn" to={`${path}/settings`}>
-              <FeatherIcon icon="settings" />
-            </NavLink>
-          )
-        }
-        key="settings"
-      >
-        <NavLink onClick={toggleCollapsed} to={`${path}/settings`}>
-          Account Settings
-        </NavLink>
-      </Menu.Item>}
-      
+      {!userType == 'School' && (
+        <Menu.Item
+          icon={
+            !topMenu && (
+              <NavLink className="menuItem-iocn" to={`${path}/settings`}>
+                <FeatherIcon icon="settings" />
+              </NavLink>
+            )
+          }
+          key="settings"
+        >
+          <NavLink onClick={toggleCollapsed} to={`${path}/settings`}>
+            Account Settings
+          </NavLink>
+        </Menu.Item>
+      )}
 
       <SubMenu
         key="appearance"
@@ -376,7 +361,6 @@ const MenueItems = ({ darkMode, toggleCollapsed, topMenu, events }) => {
           Support Center
         </NavLink>
       </Menu.Item>
-      
     </Menu>
   );
 };

@@ -10,8 +10,9 @@ import { Button } from '../../../../components/buttons/buttons';
 const Grid = () => {
   const dispatch = useDispatch();
 
-  const { showTutors, isLoader } = useSelector(state => {
+  const { school, showTutors, isLoader } = useSelector(state => {
     return {
+      school: state.fb.profile.school,
       showTutors: state.tutor.filteredData,
       isLoader: state.tutor.loading,
     };
@@ -25,14 +26,14 @@ const Grid = () => {
   const { tutors, pageSize } = state;
 
   useEffect(() => {
-    if (fetchTutors) {
+    if (fetchTutors && school) {
       if (pageSize) {
-        dispatch(fetchTutors(pageSize));
+        dispatch(fetchTutors(school, pageSize));
       } else {
-        dispatch(fetchTutors(10));
+        dispatch(fetchTutors(school, 10));
       }
     }
-  }, [dispatch, pageSize]);
+  }, [dispatch, pageSize, school]);
 
   useEffect(() => {
     if (showTutors) {

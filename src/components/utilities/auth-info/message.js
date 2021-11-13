@@ -81,8 +81,11 @@ const MessageBox = () => {
   };
 
   const notifications = convo => {
-    if (convo.notification && convo.notification.from !== uid) {
+    if (convo.notification && convo.notification.from && convo.notification.from !== uid) {
+      console.log('TRUE', convo.notification.from);
       return true;
+    } else {
+      return false;
     }
   };
 

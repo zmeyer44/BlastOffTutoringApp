@@ -10,7 +10,7 @@
     "antd": "^4.12.2",
     "antd-img-crop": "^3.14.1",
     "array-move": "^3.0.1",
-    "axios": "^0.19.2",
+    "axios": "^0.22.0",
     "chart.js": "^2.9.4",
     "cors": "^2.8.5",
     "d3-scale": "^3.2.3",
@@ -63,7 +63,7 @@
     "simple-react-lightbox": "^3.3.4-1",
     "styled-components": "^4.4.1",
     "swiper": "^6.4.10",
-    "xlsx": "^0.16.9"
+    "xlsx": "^0.17.2"
   },
   "homepage": "/",
   "scripts": {

@@ -6,6 +6,7 @@ import { useFirestoreConnect } from 'react-redux-firebase';
 import FeatherIcon from 'feather-icons-react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
+import firebase from 'firebase/app';
 import { RecordFormWrapper } from './style';
 import { PageHeader } from '../../components/page-headers/page-headers';
 import { Cards } from '../../components/cards/frame/cards-frame';
@@ -21,13 +22,44 @@ const Edit = ({ match }) => {
   const history = useHistory();
   const slug = match.params.id;
 
-  const { selectedSchool, isLoading } = useSelector(state => {
-    return {
-      selectedSchool: state.fs.data.school,
-      isLoading: state.singleSchool.loading,
-    };
-  });
-  useFirestoreConnect([{ collection: 'schools', doc: `${slug}`, storeAs: 'school' }]);
+  const [selectedSchool, setSelectedSchool] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // const { selectedSchool, isLoading } = useSelector(state => {
+  //   return {
+  //     selectedSchool: state.fs.data.school,
+  //     isLoading: state.singleSchool.loading,
+  //   };
+  // });
+  // useFirestoreConnect([{ collection: 'schools', doc: `${slug}`, storeAs: 'school' }]);
+  const getSchoolInfo = async () => {
+    try {
+      const result = await firebase
+        .firestore()
+        .collection('schools')
+        .doc(slug)
+        .get();
+      console.log(result.data());
+      return result.data();
+    } catch (error) {
+      console.error('Error writing document: ', error);
+    }
+  };
+
+  useEffect(() => {
+    getSchoolInfo()
+      .then(r => setSelectedSchool(r))
+      .then(() => setIsLoading(false))
+      .catch(err => console.error(err));
+  }, [slug]);
+
+  // useFirestoreConnect([{ collection: 'schools', doc: `${slug}`, storeAs: 'school' }]);
+  // const { selectedSchool, isLoading } = useSelector(state => {
+  //   return {
+  //     selectedSchool: state.fs.data.school,
+  //     isLoading: state.singleSchool.loading,
+  //   };
+  // });
 
   const [state, setState] = useState({
     join: '',
@@ -69,7 +101,7 @@ const Edit = ({ match }) => {
       <PageHeader
         buttons={[
           <Button className="btn-add_new" size="default" key="1" type="primary">
-            <Link key="1" to="/home/sessions/View">
+            <Link key="1" to="/home/schools/View">
               View All
             </Link>
           </Button>,

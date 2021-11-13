@@ -72,14 +72,14 @@ const setRead = (conversation, userLoggedIn) => {
           console.log('test');
           console.log(`Last notification from: ${doc.data().notification.from}`);
           console.log(`User Logged In: ${userLoggedIn}`);
-          if (doc.data().notification.from !== userLoggedIn) {
+          if (doc.data().notification) {
             console.log('updating');
             db.collection('conversations')
               .doc(`${conversation.id}`)
               .update({
                 notification: {
                   count: 0,
-                  from: userLoggedIn,
+                  from: null,
                 },
               });
           }

@@ -103,6 +103,12 @@ const fbAuthSignUp = newUser => {
           id: resp.user.uid,
           createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         });
+      await db
+        .collection('schools')
+        .doc(newUser.school)
+        .update({
+          users: firebase.firestore.FieldValue.increment(1),
+        });
       await dispatch(fbSignUpSuccess());
     } catch (err) {
       await dispatch(fbSignUpErr(err));

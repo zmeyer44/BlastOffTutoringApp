@@ -33,6 +33,7 @@ import firebaseAuth from './firebase/auth/reducers';
 import { calendarReducer } from './firebase/Calendar/reducers';
 import { sessionReducer, sessionSingleReducer } from './firebase/sessions/reducers';
 import { supportReducer } from './firebase/support/reducers';
+import { studentReducer } from './firebase/students/reducers';
 import { schoolReducer, schoolSingleReducer } from './firebase/schools/reducers';
 
 const rootReducers = combineReducers({
@@ -71,6 +72,7 @@ const rootReducers = combineReducers({
   singleCrud: fsSingleCrudReducer,
   singleSession: sessionSingleReducer,
   singleSchool: schoolSingleReducer,
+  student: studentReducer,
   support: supportReducer,
   cart: cartData,
   // Todo,
