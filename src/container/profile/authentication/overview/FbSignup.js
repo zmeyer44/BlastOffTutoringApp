@@ -116,7 +116,6 @@ const SignUp = () => {
   }, [isFbAuthenticate, handleFbLogin]);
 
   const handleChange = values => {
-    console.log(values);
     setState({
       ...state,
       ...values,
@@ -152,6 +151,10 @@ const SignUp = () => {
             })}
         </Select>
       </Form.Item>
+      <div className="input-note">
+        <NavLink to="/newSchool">Can't find your school?</NavLink>
+      </div>
+
       <Form.Item
         name="code"
         label="School Code"

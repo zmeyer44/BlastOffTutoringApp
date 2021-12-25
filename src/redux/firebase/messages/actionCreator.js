@@ -69,11 +69,7 @@ const setRead = (conversation, userLoggedIn) => {
         .doc(`${conversation.id}`)
         .get()
         .then(doc => {
-          console.log('test');
-          console.log(`Last notification from: ${doc.data().notification.from}`);
-          console.log(`User Logged In: ${userLoggedIn}`);
           if (doc.data().notification) {
-            console.log('updating');
             db.collection('conversations')
               .doc(`${conversation.id}`)
               .update({

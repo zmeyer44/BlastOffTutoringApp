@@ -13,28 +13,24 @@ const addTicketNotificationError = err => {
   });
 };
 
-
-
-
 const {
   supportTicketBegin,
   supportTicketSuccess,
   supportTicketErr,
+  addSchoolBegin,
+  addSchoolSuccess,
+  addSchoolErr,
 } = actions;
 
-
-
-const supportTicket = (data) => {
+const supportTicket = data => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     const db = getFirestore();
     try {
       await dispatch(supportTicketBegin());
-      await db
-        .collection('support')
-        .add({
-          ...data,
-        });
-      
+      await db.collection('support').add({
+        ...data,
+      });
+
       await dispatch(supportTicketSuccess());
       await addTicketNotificationSuccess();
     } catch (err) {
@@ -44,8 +40,21 @@ const supportTicket = (data) => {
   };
 };
 
-
-
-export {
-  supportTicket
+const addSchool = data => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    const db = getFirestore();
+    try {
+      await dispatch(addSchoolBegin());
+      await db.collection('support').add({
+        type: 'newSchool',
+        ...data,
+      });
+      await dispatch(addSchoolSuccess());
+    } catch (err) {
+      console.log(err);
+      await dispatch(addSchoolErr(err));
+    }
+  };
 };
+
+export { supportTicket, addSchool };

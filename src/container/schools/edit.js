@@ -184,6 +184,16 @@ const Edit = ({ match }) => {
                               <Radio value="deactivated">Deactivated</Radio>
                             </Radio.Group>
                           </Form.Item>
+                          <Form.Item
+                            name="isOpen"
+                            label="Type"
+                            rules={[{ required: true, message: 'Please choose a type' }]}
+                          >
+                            <Radio.Group>
+                              <Radio value={true}>Open</Radio>
+                              <Radio value={false}>Closed</Radio>
+                            </Radio.Group>
+                          </Form.Item>
                           {state.message}
                           <div className="record-form-actions text-right">
                             <Button size="default" htmlType="Save" type="primary">

@@ -4,6 +4,9 @@ const {
   SUPPORT_TICKET_BEGIN,
   SUPPORT_TICKET_SUCCESS,
   SUPPORT_TICKET_ERR,
+  ADD_SCHOOL_BEGIN,
+  ADD_SCHOOL_SUCCESS,
+  ADD_SCHOOL_ERR,
 } = actions;
 
 const initialState = {
@@ -22,7 +25,6 @@ const initialStateSingle = {
 const supportReducer = (state = initialState, action) => {
   const { type, data, err } = action;
   switch (type) {
-
     case SUPPORT_TICKET_BEGIN:
       return {
         ...state,
@@ -42,14 +44,29 @@ const supportReducer = (state = initialState, action) => {
         error: err,
         loading: false,
       };
+    case ADD_SCHOOL_BEGIN:
+      return {
+        ...state,
+        loading: true,
+      };
 
-    
+    case ADD_SCHOOL_SUCCESS:
+      return {
+        ...state,
+        error: false,
+        loading: false,
+      };
+
+    case ADD_SCHOOL_ERR:
+      return {
+        ...state,
+        error: err,
+        loading: false,
+      };
 
     default:
       return state;
   }
 };
-
-
 
 export { supportReducer };

@@ -115,13 +115,6 @@ const Invoice = () => {
   };
 
   const downloadInvoice = () => {
-    // var pdf = new jsPDF('p', 'pt', 'letter');
-    // pdf.canvas.height = 72 * 11;
-    // pdf.canvas.width = 72 * 8.5;
-
-    // pdf.fromHTML(document.body);
-
-    // pdf.save('test.pdf');
     window.print();
   };
 
@@ -234,10 +227,7 @@ const Invoice = () => {
                           <FeatherIcon icon="printer" size={14} />
                           Print
                         </Button>
-                        <Button size="small" shape="round" type="default">
-                          <FeatherIcon icon="send" size={14} />
-                          Send Record
-                        </Button>
+
                         <Button size="small" shape="round" type="primary" onClick={() => downloadInvoice()}>
                           <FeatherIcon icon="download" size={14} />
                           Download

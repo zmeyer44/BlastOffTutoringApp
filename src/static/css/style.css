@@ -1,5 +1,23 @@
 /* Utilitiy classes */
-
+/* Invoice Print Style */
+@media print {
+  .ant-page-header {
+    display: none;
+  }
+  .invoice-area {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  .hide-print {
+    display: none !important;
+  }
+  .customizer-trigger {
+    display: none;
+  }
+}
 .spin {
   height: 100vh;
   display: flex;
@@ -1272,10 +1290,6 @@ ul {
   align-items: center;
   border: 1px solid #f1f2f6;
   box-shadow: 0 8px 15px #9299b815;
-}
-
-.ant-tooltip .ant-tooltip-arrow {
-  /* position: relative; */
 }
 
 .ant-tooltip .ant-tooltip-arrow:after {

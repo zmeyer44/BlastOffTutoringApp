@@ -1,22 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Form, Input, Select, DatePicker, TimePicker, Radio, Rate, Spin } from 'antd';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import FeatherIcon from 'feather-icons-react';
-import moment from 'moment';
-import PropTypes from 'prop-types';
-import { RecordFormWrapper, HorizontalFormStyleWrap } from './style';
+import { HorizontalFormStyleWrap } from './style';
 import { PageHeader } from '../../components/page-headers/page-headers';
 import { Cards } from '../../components/cards/frame/cards-frame';
 import { Button } from '../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../styled';
 import { sessionReview, sessionSingle, sessionFileUploder } from '../../redux/firebase/sessions/actionCreator';
-import Heading from '../../components/heading/heading';
-import { visitLexicalEnvironment } from 'typescript';
 
 const { Option } = Select;
 const { TextArea } = Input;
-const dateFormat = 'MM/DD/YYYY';
 const Review = ({ match }) => {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -47,12 +42,6 @@ const Review = ({ match }) => {
     if (singleSession) {
       setState({ ...state, startDate: singleSession.date, startTime: singleSession.time });
     }
-    if (singleSession?.time) {
-      let current_time = moment().format('h:mm a');
-      var output = moment(current_time, 'h:mm a').diff(moment(singleSession?.time, 'h:mm a'));
-      var durationMins = Math.floor(moment.duration(output, 'milliseconds').asMinutes());
-      setState({ ...state, duration: durationMins });
-    }
   }, [singleSession, dispatch]);
 
   const handleSubmit = values => {
@@ -64,7 +53,6 @@ const Review = ({ match }) => {
     } else {
       values.quality = quality;
       values.tutor = singleSession.tutor;
-      values.duration = state.duration;
       dispatch(
         sessionReview(match.params.id, {
           ...values,
@@ -115,8 +103,15 @@ const Review = ({ match }) => {
                           <label htmlFor="duration">Duration</label>
                         </Col>
                         <Col lg={16} md={15} xs={24}>
-                          <Form.Item name="duration" rules={[{ required: true, message: 'Loading...' }]}>
-                            <Input defaultValue={`${state?.duration} mins`} disabled />
+                          <Form.Item name="duration" rules={[{ required: true, message: 'Please select a duration' }]}>
+                            <Select size="large" className="sDash_fullwidth-select">
+                              <Option value={30}>30 mins</Option>
+                              <Option value={45}>45 mins</Option>
+                              <Option value={60}>1 hour</Option>
+                              <Option value={75}>1 hour 15 mins</Option>
+                              <Option value={90}>1 hour 30 mins</Option>
+                              <Option value={120}>2 hours</Option>
+                            </Select>
                           </Form.Item>
                         </Col>
                       </Row>

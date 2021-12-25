@@ -195,6 +195,7 @@ const ThemeLayout = WrappedComponent => {
                 top: 0,
                 [!rtl ? 'left' : 'right']: 0,
               }}
+              className="hide-print"
             >
               <Row>
                 <Col lg={!topMenu ? 4 : 3} sm={6} xs={12} className="align-center-v navbar-brand">
@@ -278,10 +279,16 @@ const ThemeLayout = WrappedComponent => {
             </div>
             <Layout>
               {!topMenu || window.innerWidth <= 991 ? (
-                <ThemeProvider theme={darkTheme}>
-                  <Sider width={280} style={SideBarStyle} collapsed={collapsed} theme={!darkMode ? 'light' : 'dark'}>
+                <ThemeProvider theme={darkTheme} className="hide-print">
+                  <Sider
+                    width={280}
+                    style={SideBarStyle}
+                    collapsed={collapsed}
+                    theme={!darkMode ? 'light' : 'dark'}
+                    className="hide-print"
+                  >
                     <Scrollbars
-                      className="custom-scrollbar"
+                      className="custom-scrollbar "
                       autoHide
                       autoHideTimeout={500}
                       autoHideDuration={200}
@@ -297,6 +304,7 @@ const ThemeLayout = WrappedComponent => {
                         toggleCollapsed={toggleCollapsedMobile}
                         darkMode={darkMode}
                         events={onEventChange}
+                        className="hide-print"
                       />
                     </Scrollbars>
                   </Sider>
@@ -305,7 +313,7 @@ const ThemeLayout = WrappedComponent => {
               <Layout className="atbd-main-layout">
                 <Content>
                   <WrappedComponent {...this.props} />
-                  <Footer className="admin-footer" style={footerStyle}>
+                  <Footer className="admin-footer hide-print" style={footerStyle}>
                     <Row>
                       <Col md={12} xs={24}>
                         <span className="admin-footer__copyright">2021 © Blast Off Tutoring</span>

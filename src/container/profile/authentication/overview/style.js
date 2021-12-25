@@ -63,6 +63,10 @@ const AuthWrapper = Styled.div`
 .hide{
   display: none;
 }
+.input-note{
+  margin-top: -20px;
+  margin-bottom:20px;
+}
   height: 100%;
   padding: 40px;
   @media only screen and (max-width: 1599px){
@@ -83,6 +87,7 @@ const AuthWrapper = Styled.div`
       text-align: center;
     }
   }
+ 
   button{
     &.btn-signin{
       min-width: 185px;
@@ -126,6 +131,7 @@ const AuthWrapper = Styled.div`
           color: ${({ theme }) => theme['extra-light-color']};
         }
       }
+      
       .auth-form-action{
         margin-bottom: 20px;
         display: flex;
