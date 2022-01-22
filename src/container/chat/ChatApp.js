@@ -120,17 +120,6 @@ const ChatApp = ({ match }) => {
                 </div>
                 <nav>
                   <UL>
-                    {/* <li>
-                      <NavLink activeClassName="active" to={`${match.path}/private/rofiq@gmail.com`}>
-                        Private Chat
-                      </NavLink>
-                    </li>
-                    <li>
-                      <NavLink activeClassName="active" to={`${match.path}/group/1`}>
-                        Group Chat
-                        <Badge className="badge-error" count={3} />
-                      </NavLink>
-                    </li> */}
                     <li>
                       <NavLink activeClassName="active" to={`${match.path}`}>
                         All Contacts

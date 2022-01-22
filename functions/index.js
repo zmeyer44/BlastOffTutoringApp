@@ -52,6 +52,8 @@ exports.support = functions.firestore.document('support/{userId}').onCreate(asyn
   return sgMail.send(msg);
 });
 
+
+
 //Email when new invite is created
 exports.newMessage = functions.firestore.document('conversations/{convoId}').onUpdate(change => {
   const convo = change.after.data();
@@ -150,3 +152,5 @@ exports.newReview = functions.firestore.document('reviews/{reviewId}').onCreate(
 //   functions.logger.info("Hello logs!", {structuredData: true});
 //   response.send("Hello from Firebase!");
 // });
+
+
