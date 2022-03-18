@@ -6,16 +6,11 @@ import Pages from './pages';
 import Users from './users';
 import Widgets from './widgets';
 import Search from './search';
-import Features from './features';
-import Gallery from './gallery';
 import withAdminLayout from '../../layout/withAdminLayout';
 
-const Projects = lazy(() => import('./projects'));
-const Inbox = lazy(() => import('../../container/email/Email'));
 const Profile = lazy(() => import('../../container/profile/profile/Index'));
 const Chat = lazy(() => import('../../container/chat/ChatApp'));
 const Myprofile = lazy(() => import('../../container/profile/myProfile/Index'));
-const Firebase = lazy(() => import('./firebase'));
 const Sessions = lazy(() => import('./sessions'));
 const Students = lazy(() => import('./students'));
 const Schools = lazy(() => import('./schools'));
@@ -46,12 +41,6 @@ const Home = () => {
         <Route path={`${path}/profile/:id`} component={Profile} />
         <Route path={`${path}/search`} component={Search} />
         <Route path={`${path}/users`} component={Users} />
-        <Route path={`${path}/gallery`} component={Gallery} />
-        <Route path={`${path}/project`} component={Projects} />
-        {/* <Route path={`${path}/app/fileManager`} component={FileManager} /> */}
-        <Route path={`${path}/app/kanban`} component={Kanban} />
-        <Route path={`${path}/email/:page`} component={Inbox} />
-        <Route path={`${path}/firestore`} component={Firebase} />
         <Route path={`${path}/sessions`} component={Sessions} />
         <Route path={`${path}/students`} component={Students} />
         <Route path={`${path}/schools`} component={Schools} />

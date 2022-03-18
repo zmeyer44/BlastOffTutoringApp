@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Table } from 'antd';
+import { Link } from 'react-router-dom';
 import FeatherIcon from 'feather-icons-react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { InvoiceHeader, InvoiceLetterBox, InvoiceAction, ProductTable, OrderSummary } from './style';
 import { PageHeader } from '../../components/page-headers/page-headers';
 import { Main } from '../styled';
 import { Cards } from '../../components/cards/frame/cards-frame';
 import Heading from '../../components/heading/heading';
 import { Button } from '../../components/buttons/buttons';
-import { ShareButtonPageHeader } from '../../components/buttons/share-button/share-button';
-import { ExportButtonPageHeader } from '../../components/buttons/export-button/export-button';
-import { CalendarButtonPageHeader } from '../../components/buttons/calendar-button/calendar-button';
-import { fetchReviews } from '../../redux/firebase/sessions/actionCreator';
 import firebase from 'firebase';
 
 const Invoice = () => {
@@ -125,13 +122,12 @@ const Invoice = () => {
         title="Record"
         buttons={[
           <div key="1" className="page-header-actions">
-            <CalendarButtonPageHeader key="1" />
-            <ExportButtonPageHeader key="2" />
-            <ShareButtonPageHeader key="3" />
-            <Button size="small" key="4" type="primary">
-              <FeatherIcon icon="plus" size={14} />
-              Add New
-            </Button>
+            <Link to="/home/missing-hours">
+              <Button size="small" key="4" type="primary">
+                <FeatherIcon icon="plus" size={14} />
+                Missing Hours?
+              </Button>
+            </Link>
           </div>,
         ]}
       />

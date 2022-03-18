@@ -9,7 +9,6 @@ import Picker from 'emoji-picker-react';
 import moment from 'moment';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import SimpleReactLightbox, { SRLWrapper } from 'simple-react-lightbox';
 import { AllPosts, BackShadowEmoji, Title } from './style';
 import { Cards } from '../../../../../components/cards/frame/cards-frame';
 import { Button } from '../../../../../components/buttons/buttons';
@@ -129,7 +128,6 @@ const Posts = ({ postId, from, time, img, like, comment, content, author }) => {
   };
 
   return (
-    <SimpleReactLightbox>
       <AllPosts>
         <Cards
           title={
@@ -151,7 +149,7 @@ const Posts = ({ postId, from, time, img, like, comment, content, author }) => {
           <div className="post-content">
             <div className="gallery">
               {img.length ? (
-                <SRLWrapper>
+                <>
                   <Masonry
                     breakpointCols={img.length <= 2 ? img.length : 2}
                     className="my-masonry-grid"
@@ -194,7 +192,7 @@ const Posts = ({ postId, from, time, img, like, comment, content, author }) => {
                       })}
                     </Masonry>
                   )}
-                </SRLWrapper>
+                </>
               ) : null}
             </div>
             <div className="post-text">
@@ -289,7 +287,6 @@ const Posts = ({ postId, from, time, img, like, comment, content, author }) => {
           </div>
         </Cards>
       </AllPosts>
-    </SimpleReactLightbox>
   );
 };
 

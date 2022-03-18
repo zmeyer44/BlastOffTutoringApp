@@ -80,17 +80,6 @@ const Search = () => {
                         <Radio.Button value="createdAt">Newest</Radio.Button>
                       </Radio.Group>
                     </div>
-                    {(window.innerWidth <= 991 && window.innerWidth >= 768) ||
-                      (window.innerWidth > 575 && (
-                        <div className="product-list-action__viewmode">
-                          <NavLink to={`${path}/grid`}>
-                            <FeatherIcon icon="grid" size={16} />
-                          </NavLink>
-                          {/* <NavLink to={`${path}/list`}>
-                            <FeatherIcon icon="list" size={16} />
-                          </NavLink> */}
-                        </div>
-                      ))}
                   </div>
                 </Col>
               </Row>

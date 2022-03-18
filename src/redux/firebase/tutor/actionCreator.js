@@ -19,6 +19,7 @@ const {
 } = actions;
 
 const fetchTutors = (school, pageSize) => {
+  console.log('FETCHING TUTORS');
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     const db = getFirestore();
     const data = [];
@@ -37,37 +38,74 @@ const fetchTutors = (school, pageSize) => {
       console.log(err);
       await dispatch(fetchTutorsErr(err));
     }
-    console.log(openSchools);
 
     if (openSchools.includes(school)) {
-      console.log('IS Open');
       try {
         await dispatch(fetchTutorsBegin());
-        let query = await db
-          .collection('users')
-          .where('school', 'in', openSchools)
-          .where('active', '==', true)
-          .where('approved', '==', true)
-          .where('id', '>=', key)
-          .limit(pageSize)
-          .get();
-        await query.forEach(doc => {
-          data.push(doc.data());
+        const data = await new Promise(outcome => {
+          const tutorsRef = db.collection('users');
+          let batches = [];
+          while (openSchools.length) {
+            const batch = openSchools.splice(0, 10);
+            batches.push(
+              new Promise(response => {
+                tutorsRef
+                  .where('school', 'in', batch)
+                  .where('active', '==', true)
+                  .where('approved', '==', true)
+                  .where('id', '>=', key)
+                  .limit(pageSize)
+                  .get()
+                  .then(tutors => {
+                    var newtutors = [];
+                    tutors.forEach(doc => {
+                      newtutors.push(doc.data());
+                    });
+                    response(newtutors);
+                  });
+              }),
+            );
+          }
+          Promise.all(batches).then(tutors => {
+            let formatted = tutors.flat();
+            outcome(formatted);
+          });
         });
         if (data.length < pageSize) {
-          let more = await db
-            .collection('users')
-            .where('school', 'in', openSchools)
-            .where('active', '==', true)
-            .where('approved', '==', true)
-            .where('id', '<', key)
-            .limit(pageSize - data.length)
-            .get();
-          await more.forEach(doc => {
-            data.push(doc.data());
+          const moreData = await new Promise(outcome => {
+            const tutorsRef = db.collection('users');
+            let batches = [];
+            while (openSchools.length) {
+              const batch = openSchools.splice(0, 10);
+              batches.push(
+                new Promise(response => {
+                  tutorsRef
+                    .where('school', 'in', batch)
+                    .where('active', '==', true)
+                    .where('approved', '==', true)
+                    .where('id', '<', key)
+                    .limit(pageSize - data.length)
+                    .get()
+                    .then(tutors => {
+                      var newtutors = [];
+                      tutors.forEach(doc => {
+                        newtutors.push(doc.data());
+                      });
+                      response(newtutors);
+                    });
+                }),
+              );
+            }
+            Promise.all(batches).then(tutors => {
+              let formatted = tutors.flat();
+              outcome(formatted);
+            });
           });
+          const finalData = data.concat(moreData);
+          return await dispatch(fetchTutorsSuccess(finalData));
+        } else {
+          return await dispatch(fetchTutorsSuccess(data));
         }
-        await dispatch(fetchTutorsSuccess(data));
       } catch (err) {
         console.log(err);
         await dispatch(fetchTutorsErr(err));

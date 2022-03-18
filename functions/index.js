@@ -35,6 +35,10 @@ exports.support = functions.firestore.document('support/{userId}').onCreate(asyn
     emailData.subject = 'New School Request';
     emailData.name = `Unknown`;
     emailData.text = `School Name: ${data.schoolName}. School Website: ${data.schoolWebsite}. Contact Email: ${data.contactEmail}`;
+  } else if (data.type == 'missingHours') {
+    emailData.subject = data.subject;
+    emailData.name = `Email: ${data.userEmail}, Account: ${data.user}`;
+    emailData.text = `Duration: ${data.duration}. Description: ${data.issue}.`;
   } else {
     emailData.subject = 'Service Ticket';
     emailData.name = `Email: ${data.userEmail}, Account: ${data.user}`;
@@ -51,8 +55,6 @@ exports.support = functions.firestore.document('support/{userId}').onCreate(asyn
 
   return sgMail.send(msg);
 });
-
-
 
 //Email when new invite is created
 exports.newMessage = functions.firestore.document('conversations/{convoId}').onUpdate(change => {
@@ -152,5 +154,3 @@ exports.newReview = functions.firestore.document('reviews/{reviewId}').onCreate(
 //   functions.logger.info("Hello logs!", {structuredData: true});
 //   response.send("Hello from Firebase!");
 // });
-
-
