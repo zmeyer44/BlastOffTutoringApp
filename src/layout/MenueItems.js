@@ -216,7 +216,7 @@ const MenueItems = ({ darkMode, toggleCollapsed, topMenu, events }) => {
             icon={
               !topMenu && (
                 <NavLink className="menuItem-iocn" to={`${path}/students`}>
-                  <FeatherIcon icon="users" />
+                  <FeatherIcon icon="edit" />
                 </NavLink>
               )
             }
@@ -224,6 +224,20 @@ const MenueItems = ({ darkMode, toggleCollapsed, topMenu, events }) => {
           >
             <NavLink onClick={toggleCollapsed} to={`${path}/students`}>
               Approve Students
+            </NavLink>
+          </Menu.Item>
+          <Menu.Item
+            icon={
+              !topMenu && (
+                <NavLink className="menuItem-iocn" to={`${path}/allstudents`}>
+                  <FeatherIcon icon="users" />
+                </NavLink>
+              )
+            }
+            key="allStudents"
+          >
+            <NavLink onClick={toggleCollapsed} to={`${path}/allstudents`}>
+              All Students
             </NavLink>
           </Menu.Item>
           {/* <Menu.Item

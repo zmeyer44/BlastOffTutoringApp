@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Row, Col, Table } from 'antd';
 import FeatherIcon from 'feather-icons-react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams, useHistory } from 'react-router-dom';
 import { InvoiceHeader, InvoiceLetterBox, InvoiceAction, ProductTable, OrderSummary } from './style';
 import { PageHeader } from '../../components/page-headers/page-headers';
 import { Main } from '../styled';
@@ -16,15 +17,16 @@ import firebase from 'firebase';
 
 const Invoice = () => {
   var db = firebase.firestore();
+  const history = useHistory();
+  let { id } = useParams();
 
-  const { rtl, uid, tutor } = useSelector(state => {
+  const { rtl } = useSelector(state => {
     return {
       rtl: state.ChangeLayoutMode.rtlData,
-      uid: state.fb.auth.uid,
-      tutor: state.fb.profile,
     };
   });
 
+  const [studentData, setStudentData] = useState(null);
   const [records, setRecords] = useState(null);
   const [loading, setLoading] = useState(true);
   const [date, setDate] = useState(null);
@@ -33,10 +35,14 @@ const Invoice = () => {
   const fetchRecords = async uid => {
     const data = [];
     let totalTime = 0;
+    const profile = db.collection('users').doc(uid);
     const response = db
       .collection('sessions')
       .where('tutor.id', '==', uid)
       .where('status', '==', 'approved');
+    const profileQuery = await profile.get();
+    const profileData = profileQuery.data();
+    setStudentData(profileData);
     const query = await response.get();
     query.docs.forEach((record, index) => {
       let rec = record.data();
@@ -70,8 +76,8 @@ const Invoice = () => {
     setTotal(totalTime);
   };
   useEffect(() => {
-    if (uid) {
-      fetchRecords(uid);
+    if (id) {
+      fetchRecords(id);
       setLoading(false);
       let today = new Date();
       let dd = String(today.getDate()).padStart(2, '0');
@@ -80,7 +86,7 @@ const Invoice = () => {
       today = mm + '/' + dd + '/' + yyyy;
       setDate(today);
     }
-  }, [uid]);
+  }, [id]);
 
   const invoiceTableColumns = [
     {
@@ -132,9 +138,9 @@ const Invoice = () => {
         title="Record"
         buttons={[
           <div key="1" className="page-header-actions">
-            <Button size="small" key="4" type="primary">
-              <FeatherIcon icon="plus" size={14} />
-              Missing Hours?
+            <Button size="small" key="4" type="primary" onClick={() => history.goBack()}>
+              <FeatherIcon icon="chevron-left" size={14} />
+              Return
             </Button>
           </div>,
         ]}
@@ -169,13 +175,13 @@ const Invoice = () => {
                         <Heading className="invoice-author__title" as="h3">
                           Certificate
                         </Heading>
-                        <p>{`No : #${uid}`}</p>
+                        <p>{`No : #${id}`}</p>
                         <p>{`Date : ${date}`}</p>
                       </article>
                       <div className="invoice-barcode">
                         <Cards headless>
                           <img style={{ width: '100%' }} src={require('../../static/img/barcode.png')} alt="barcode" />
-                          <p>{uid}</p>
+                          <p>{id}</p>
                         </Cards>
                       </div>
                       <address className="invoice-customer">
@@ -183,8 +189,8 @@ const Invoice = () => {
                           Tutor:
                         </Heading>
                         <p>
-                          {`${tutor.firstName} ${tutor.lastName}`} <br />
-                          {tutor.school} <br />
+                          {`${studentData.firstName} ${studentData.lastName}`} <br />
+                          {studentData.school} <br />
                         </p>
                       </address>
                     </div>

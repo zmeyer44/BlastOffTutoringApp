@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Table, Spin } from 'antd';
+import { Row, Col, Table, Spin, Skeleton } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFirestoreConnect } from 'react-redux-firebase';
-import { Link } from 'react-router-dom';
+import { Switch, Route, Link } from 'react-router-dom';
 import FeatherIcon from 'feather-icons-react';
+import Certificate from './invoice';
 import { RecordViewWrapper } from './style';
 import { Main, TableWrapper } from '../styled';
 import { Popover } from '../../components/popup/popup';
@@ -11,8 +12,28 @@ import { Button } from '../../components/buttons/buttons';
 import { Cards } from '../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../components/page-headers/page-headers';
 import { studentApprove } from '../../redux/firebase/students/actionCreator';
+import Invoice from './invoice';
 
-const ViewPage = () => {
+const StudentsTable = (rowSelection, dataSource, columns) => {
+  return (
+    <div>
+      {dataSource ? (
+        <TableWrapper className="table-data-view table-responsive">
+          <Table
+            rowSelection={rowSelection}
+            pagination={{ pageSize: 10, showSizeChanger: true }}
+            dataSource={dataSource}
+            columns={columns}
+          />
+        </TableWrapper>
+      ) : (
+        <div />
+      )}
+    </div>
+  );
+};
+
+const ViewPage = ({ match }) => {
   const dispatch = useDispatch();
   const { students, isLoading, school } = useSelector(state => {
     return {
@@ -25,11 +46,7 @@ const ViewPage = () => {
   useFirestoreConnect([
     {
       collection: 'users',
-      where: [
-        ['school', '==', `${school}`],
-        ['type', '==', 'Tutor'],
-        ['approved', '==', false],
-      ],
+      where: ['school', '==', `${school}`],
       storeAs: 'students',
     },
   ]);
@@ -58,7 +75,7 @@ const ViewPage = () => {
 
   if (students) {
     students.map((person, key) => {
-      const { id, firstName, lastName, email, school, approved, profileImage } = person;
+      const { id, firstName, lastName, email, school, type, approved, profileImage } = person;
       return dataSource.push({
         key: key + 1,
         name: (
@@ -74,24 +91,24 @@ const ViewPage = () => {
           </div>
         ),
         email,
-        approved: approved ? (
-          <span className="status pending">Approved</span>
-        ) : (
-          <span className="status pending">Pending</span>
-        ),
-        action: (
-          <div className="table-actions">
-            <Popover placement="top" content="Approve Student">
-              <Link className="edit" to="#" onClick={() => handleApprove(id)}>
-                <FeatherIcon icon="edit" size={14} />
-              </Link>
-            </Popover>
-            &nbsp;&nbsp;&nbsp;
-            {/* <Link className="delete" onClick={() => handleDelete(id)} to="#">
-              <FeatherIcon icon="trash-2" size={14} />
-            </Link> */}
-          </div>
-        ),
+        type: <span className="status">{type}</span>,
+
+        action:
+          type == 'Tutor' ? (
+            <div className="table-actions">
+              <Popover placement="top" content="View Certificate">
+                <Link className="edit" to={`${match.path}/${id}`}>
+                  <FeatherIcon icon="eye" size={14} />
+                </Link>
+              </Popover>
+              &nbsp;&nbsp;&nbsp;
+            </div>
+          ) : (
+            <div className="table-actions">
+              <span className="status">Not a Tutor</span>
+              &nbsp;&nbsp;&nbsp;
+            </div>
+          ),
       });
     });
   }
@@ -108,12 +125,12 @@ const ViewPage = () => {
       key: 'email',
     },
     {
-      title: 'Status',
-      dataIndex: 'approved',
-      key: 'approved',
+      title: 'Account Type',
+      dataIndex: 'type',
+      key: 'type',
     },
     {
-      title: 'Actions',
+      title: 'View Certificate',
       dataIndex: 'action',
       key: 'action',
       width: '90px',
@@ -130,7 +147,7 @@ const ViewPage = () => {
 
   return (
     <RecordViewWrapper>
-      <PageHeader ghost title="Pending Students" />
+      <PageHeader ghost title="All Students" />
       <Main>
         <Row gutter={15}>
           <Col className="w-100" md={24}>
@@ -140,16 +157,31 @@ const ViewPage = () => {
                   <Spin />
                 </div>
               ) : (
-                <div>
-                  <TableWrapper className="table-data-view table-responsive">
-                    <Table
-                      rowSelection={rowSelection}
-                      pagination={{ pageSize: 10, showSizeChanger: true }}
-                      dataSource={dataSource}
-                      columns={columns}
-                    />
-                  </TableWrapper>
-                </div>
+                <Switch>
+                  <Route
+                    exact
+                    path={`${match.path}/:id`}
+                    render={() => {
+                      return <Invoice />;
+                    }}
+                  />
+                  <Route
+                    exact
+                    path={`${match.path}`}
+                    render={() => {
+                      return (
+                        <TableWrapper className="table-data-view table-responsive">
+                          <Table
+                            rowSelection={rowSelection}
+                            pagination={{ pageSize: 10, showSizeChanger: true }}
+                            dataSource={dataSource}
+                            columns={columns}
+                          />
+                        </TableWrapper>
+                      );
+                    }}
+                  />
+                </Switch>
               )}
             </Cards>
           </Col>

@@ -3,7 +3,7 @@ import { Row, Col, Table } from 'antd';
 import { Link } from 'react-router-dom';
 import FeatherIcon from 'feather-icons-react';
 import { useSelector } from 'react-redux';
-import { InvoiceHeader, InvoiceLetterBox, InvoiceAction, ProductTable, OrderSummary } from './style';
+import { InvoiceHeader, InvoiceLetterBox, InvoiceAction, ProductTable, OrderSummary } from '../sessions/style';
 import { PageHeader } from '../../components/page-headers/page-headers';
 import { Main } from '../styled';
 import { Cards } from '../../components/cards/frame/cards-frame';

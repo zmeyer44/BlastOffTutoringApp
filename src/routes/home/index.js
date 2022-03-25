@@ -13,6 +13,7 @@ const Chat = lazy(() => import('../../container/chat/ChatApp'));
 const Myprofile = lazy(() => import('../../container/profile/myProfile/Index'));
 const Sessions = lazy(() => import('./sessions'));
 const Students = lazy(() => import('./students'));
+const AllStudents = lazy(() => import('./allStudents'));
 const Schools = lazy(() => import('./schools'));
 const ToDo = lazy(() => import('../../container/toDo/ToDo'));
 const Note = lazy(() => import('../../container/note/Note'));
@@ -43,6 +44,7 @@ const Home = () => {
         <Route path={`${path}/users`} component={Users} />
         <Route path={`${path}/sessions`} component={Sessions} />
         <Route path={`${path}/students`} component={Students} />
+        <Route path={`${path}/allstudents`} component={AllStudents} />
         <Route path={`${path}/schools`} component={Schools} />
         <Route path={`${path}/chat`} component={Chat} />
         <Route path={`${path}/profile/myProfile`} component={Myprofile} />
