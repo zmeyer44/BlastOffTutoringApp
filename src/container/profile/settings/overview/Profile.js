@@ -97,6 +97,7 @@ const Profile = () => {
                         <Option value="social-studies">Social Studies</Option>
                         <Option value="spanish">Spanish</Option>
                         <Option value="french">French</Option>
+                        <Option value="italian">Italian</Option>
                         <Option value="geometry">Geometry</Option>
                         <Option value="marketing">Marketing</Option>
                         <Option value="computer-science">Computer Science</Option>

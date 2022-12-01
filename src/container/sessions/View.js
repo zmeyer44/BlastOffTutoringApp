@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Row, Col, Table, Spin } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFirestoreConnect } from 'react-redux-firebase';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import FeatherIcon from 'feather-icons-react';
 import { RecordViewWrapper } from './style';
 import { Main, TableWrapper } from '../styled';
@@ -14,6 +14,8 @@ import { sessionDelete, sessionRead, sessionSearch, sessionUpdate } from '../../
 
 const ViewPage = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
+
   const { sessions1, sessions2, isLoading, uid, type } = useSelector(state => {
     return {
       sessions1: state.fs.data.sessions1,
@@ -66,6 +68,11 @@ const ViewPage = () => {
   }, [sessions1, sessions2]);
   const dataSource = [];
 
+  const handleConfirm = id => {
+    history.push(`/home/sessions/review/${id}`);
+
+    return;
+  };
   const handleAccept = id => {
     dispatch(sessionUpdate(id, { status: 'accepted' }));
 
@@ -154,6 +161,18 @@ const ViewPage = () => {
                   <Link className="delete" onClick={() => handleReject(id)} to="#">
                     <Button className="btn-icon" type="danger" to="#" shape="circle">
                       <FeatherIcon icon="trash-2" size={16} />
+                    </Button>
+                  </Link>
+                </Popover>
+                &nbsp;&nbsp;&nbsp;
+              </>
+            )}
+            {uid === student.id && status == 'accepted' && (
+              <>
+                <Popover placement="top" content="Confirm Session / Review Tutor">
+                  <Link className="edit" onClick={() => handleConfirm(id)} to="#">
+                    <Button className="btn-icon" type="primary" to="#" shape="circle">
+                      <FeatherIcon icon="user-check" size={16} />
                     </Button>
                   </Link>
                 </Popover>

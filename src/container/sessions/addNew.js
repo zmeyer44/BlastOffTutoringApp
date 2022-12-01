@@ -177,6 +177,7 @@ const AddNew = () => {
                             <Option value="Social Studies">Social Studies</Option>
                             <Option value="Spanish">Spanish</Option>
                             <Option value="French">French</Option>
+                            <Option value="italian">Italian</Option>
                             <Option value="Geometry">Geometry</Option>
                             <Option value="Marketing">Marketing</Option>
                             <Option value="Computer Science">Computer Science</Option>
