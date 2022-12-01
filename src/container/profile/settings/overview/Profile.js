@@ -104,6 +104,19 @@ const Profile = () => {
                         <Option value="physics">Physics</Option>
                       </Select>
                     </Form.Item>
+                    <Form.Item name="tutoring-type" label="Tutoring Preference" rules={[{ required: true }]}>
+                      <Radio.Group>
+                        <Radio id="in-person" value="in-person">
+                          In-person
+                        </Radio>
+                        <Radio id="virtual" value="virtual">
+                          Virtual
+                        </Radio>
+                        <Radio id="both" value="both">
+                          Both
+                        </Radio>
+                      </Radio.Group>
+                    </Form.Item>
                     <Form.Item name="active" label="Status" rules={[{ required: true }]}>
                       <Radio.Group>
                         <Radio value={true}>Active</Radio>

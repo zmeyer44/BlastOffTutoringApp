@@ -61,6 +61,22 @@ const fetchTutors = (school, pageSize) => {
                     tutors.forEach(doc => {
                       newtutors.push(doc.data());
                     });
+
+                    if (newtutors.length < pageSize) {
+                      tutorsRef
+                        .where('school', 'in', batch)
+                        .where('active', '==', true)
+                        .where('approved', '==', true)
+                        .where('id', '>=', key)
+                        .limit(pageSize * 2)
+                        .get()
+                        .then(tutors => {
+                          var newtutors = [];
+                          tutors.forEach(doc => {
+                            newtutors.push(doc.data());
+                          });
+                        });
+                    }
                     response(newtutors);
                   });
               }),
@@ -228,13 +244,16 @@ const filterTutors = (state, startingData) => {
           return state.subjects.every(subject => tutor.subjects.includes(subject));
         });
       }
+      if (state.style) {
+        data = data.filter(tutor => {
+          return state.style.some(style => tutor['tutoring-type'] === style);
+        });
+      }
       if (state.schools.length) {
-        console.log('State school: ' + state.schools);
         data = data.filter(tutor => {
           return state.schools.includes(tutor.school);
         });
       }
-      console.log('Data after filter: ' + data);
       dispatch(filterTutorSuccess(data));
     } catch (err) {
       console.log(err);
@@ -251,6 +270,27 @@ const filterByRating = range => {
         const data = initialState.filter(product => {
           if (range[0].length) {
             return range[0].includes(product.rate);
+          }
+          return initialState;
+        });
+        dispatch(filterProductSuccess(data));
+      }, 100);
+    } catch (err) {
+      dispatch(filterProductErr(err));
+    }
+  };
+};
+
+const filterByTutoringType = type => {
+  console.log('Type', type);
+  return async dispatch => {
+    try {
+      dispatch(filterProductBegin());
+      setTimeout(() => {
+        const data = initialState.filter(product => {
+          console.log('Tutor', product);
+          if (type[0].length) {
+            return type[0].includes(product.brand);
           }
           return initialState;
         });
@@ -324,6 +364,7 @@ export {
   filterTutors,
   filterByRating,
   filterByBrand,
+  filterByTutoringType,
   filterByCategory,
   updateWishList,
 };

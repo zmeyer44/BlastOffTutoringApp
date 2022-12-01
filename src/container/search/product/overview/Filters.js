@@ -10,7 +10,12 @@ import Heading from '../../../../components/heading/heading';
 import { Slider } from '../../../../components/slider/slider';
 import { CheckboxGroup } from '../../../../components/checkbox/checkbox';
 import { Sidebar, SidebarSingle } from '../../Style';
-import { filterTutors, filterByBrand, filterByCategory } from '../../../../redux/firebase/tutor/actionCreator';
+import {
+  filterTutors,
+  filterByBrand,
+  filterByCategory,
+  filterByTutoringType,
+} from '../../../../redux/firebase/tutor/actionCreator';
 
 const { Option } = Select;
 
@@ -43,7 +48,7 @@ const Filters = allTutors => {
   };
 
   const onChangeStyle = checkValue => {
-    dispatch(filterByBrand([checkValue]));
+    dispatch(filterByTutoringType([checkValue]));
   };
 
   useEffect(() => {
@@ -110,16 +115,16 @@ const Filters = allTutors => {
 
   const optionsStyle = [
     {
-      label: <>Visual Learner</>,
-      value: 'visual',
+      label: <>In person</>,
+      value: 'in-person',
     },
     {
-      label: <>Auditory Learner</>,
-      value: 'auditory',
+      label: <>Virtual</>,
+      value: 'virtual',
     },
     {
-      label: <>Logical Learner</>,
-      value: 'logical',
+      label: <>Both</>,
+      value: 'both',
     },
   ];
 
@@ -133,6 +138,12 @@ const Filters = allTutors => {
     setState({
       ...state,
       schools: value,
+    });
+  };
+  const styleFilter = value => {
+    setState({
+      ...state,
+      style: value,
     });
   };
   const ratingFilter = value => {
@@ -194,8 +205,8 @@ const Filters = allTutors => {
         </SidebarSingle> */}
 
         <SidebarSingle style={{ marginBottom: 32 }}>
-          <Heading as="h5">Learning Style</Heading>
-          <CheckboxGroup options={optionsStyle} onChange={onChangeStyle} />
+          <Heading as="h5">Tutoring Style</Heading>
+          <CheckboxGroup options={optionsStyle} onChange={styleFilter} />
         </SidebarSingle>
 
         <SidebarSingle>
