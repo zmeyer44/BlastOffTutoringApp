@@ -68,7 +68,7 @@ const Grid = () => {
               onChange={onHandleChange}
               showSizeChanger
               onShowSizeChange={onShowSizeChange}
-              pageSize={10}
+              pageSize={30}
               defaultCurrent={1}
               total={40}
             />

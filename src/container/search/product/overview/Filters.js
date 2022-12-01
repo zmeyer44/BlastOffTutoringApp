@@ -47,10 +47,6 @@ const Filters = allTutors => {
     dispatch(filterByRating([checkValue]));
   };
 
-  const onChangeStyle = checkValue => {
-    dispatch(filterByTutoringType([checkValue]));
-  };
-
   useEffect(() => {
     console.log('state triggered:' + allTutors.tutors);
     dispatch(filterTutors(state, allTutors));

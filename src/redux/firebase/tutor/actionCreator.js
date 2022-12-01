@@ -244,7 +244,7 @@ const filterTutors = (state, startingData) => {
           return state.subjects.every(subject => tutor.subjects.includes(subject));
         });
       }
-      if (state.style) {
+      if (state.style.length) {
         data = data.filter(tutor => {
           return state.style.some(style => tutor['tutoring-type'] === style);
         });

@@ -21,7 +21,7 @@ const Grid = () => {
   const [state, setState] = useState({
     tutors: showTutors,
     current: 0,
-    pageSize: 20,
+    pageSize: 30,
   });
   const { tutors, pageSize } = state;
 
@@ -30,7 +30,7 @@ const Grid = () => {
       if (pageSize) {
         dispatch(fetchTutors(school, pageSize));
       } else {
-        dispatch(fetchTutors(school, 20));
+        dispatch(fetchTutors(school, 30));
       }
     }
   }, [dispatch, pageSize, school]);
@@ -45,7 +45,7 @@ const Grid = () => {
   }, [showTutors]);
 
   const onLoadMore = () => {
-    let newSize = pageSize + 20;
+    let newSize = pageSize + 30;
     setState({ ...state, pageSize: newSize });
   };
 
