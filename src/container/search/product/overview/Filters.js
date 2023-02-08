@@ -48,7 +48,7 @@ const Filters = allTutors => {
   };
 
   useEffect(() => {
-    console.log('state triggered:' + allTutors.tutors);
+    console.log('state triggered:', allTutors);
     dispatch(filterTutors(state, allTutors));
   }, [state]);
 

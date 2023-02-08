@@ -161,44 +161,6 @@ const fetchTutors = (school, pageSize) => {
     }
   };
 };
-// const fetchTutors = pageSize => {
-//   return async (dispatch, getState, { getFirebase, getFirestore }) => {
-//     const db = getFirestore();
-//     const data = [];
-//     const key = db.collection('users').doc().id;
-//     try {
-//       await dispatch(fetchTutorsBegin());
-//       let query = await db
-//         .collection('users')
-//         .where('active', '==', true)
-//         .where('approved', '==', true)
-//         .where('id', '>=', key)
-//         .limit(pageSize)
-//         .get();
-//       await query.forEach(doc => {
-//         data.push(doc.data());
-//       });
-//       console.log(data.length);
-//       if (data.length < pageSize) {
-//         let more = await db
-//           .collection('users')
-//           .where('active', '==', true)
-//           .where('approved', '==', true)
-//           .where('id', '<', key)
-//           .limit(pageSize - data.length)
-//           .get();
-//         await more.forEach(doc => {
-//           data.push(doc.data());
-//         });
-//       }
-//       await dispatch(fetchTutorsSuccess(data));
-//     } catch (err) {
-//       console.log(err);
-//       await dispatch(fetchTutorsErr(err));
-//     }
-//   };
-// };
-
 const filterSinglePage = (paramsId, currentState) => {
   return async dispatch => {
     try {
@@ -244,12 +206,12 @@ const filterTutors = (state, startingData) => {
           return state.subjects.every(subject => tutor.subjects.includes(subject));
         });
       }
-      if (state.style.length) {
+      if (state.style?.length) {
         data = data.filter(tutor => {
           return state.style.some(style => tutor['tutoring-type'] === style);
         });
       }
-      if (state.schools.length) {
+      if (state.schools?.length) {
         data = data.filter(tutor => {
           return state.schools.includes(tutor.school);
         });
